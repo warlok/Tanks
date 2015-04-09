@@ -22,20 +22,20 @@ public class BT7 extends AbstractTank {
     public BT7(BattleField bf) {
         super(bf);
         speed = super.speed / 2;
-        colorTank = new java.awt.Color(255, 0, 0);
-        colorTower = new java.awt.Color(0, 255, 0);
+//        colorTank = new java.awt.Color(255, 0, 0);
+//        colorTower = new java.awt.Color(0, 255, 0);
         loadImage();
     }
 
     public BT7(BattleField bf, int x, int y, Direction direction) {
         super(bf, x, y, direction);
         speed = super.speed / 2;
-        colorTank = new java.awt.Color(255, 0, 0);
-        colorTower = new java.awt.Color(0, 255, 0);
+//        colorTank = new java.awt.Color(255, 0, 0);
+//        colorTower = new java.awt.Color(0, 255, 0);
         loadImage();
     }
 
-    private void loadImage() {
+    protected void loadImage() {
         try {
             img_left = ImageIO.read(new File("BT7_left.png"));
 
@@ -67,25 +67,26 @@ public class BT7 extends AbstractTank {
 
     @Override
     public Action setupTank() throws Exception {
-        if (this.getX() < 4 * 64) {
-            while (this.getX() != 4 * 64) {
-                if (this.direction != Direction.RIGHT) {
-                    this.turn(Direction.RIGHT);
+
+        if (x < 4 * 64) {
+            while (x != 4 * 64) {
+                if (direction != Direction.RIGHT) {
+                    turn(Direction.RIGHT);
                     return Action.TURN;
                 }
-                if (processTankInterception()) {
+                if (interception()) {
                     return Action.FIRE;
                 } else {
                     return Action.MOVE;
                 }
             }
         } else {
-            while (this.getX() != 4 * 64) {
-                if (this.direction != Direction.LEFT) {
-                    this.turn(Direction.LEFT);
+            while (x != 4 * 64) {
+                if (direction != Direction.LEFT) {
+                    turn(Direction.LEFT);
                     return Action.TURN;
                 }
-                if (processTankInterception()) {
+                if (interception()) {
                     return Action.FIRE;
                 } else {
                     return Action.MOVE;
@@ -93,25 +94,25 @@ public class BT7 extends AbstractTank {
             }
         }
 
-        if (this.getY() < 7 * 64) {
-            while (this.getY() != 7 * 64) {
-                if (this.direction != Direction.DOWN) {
-                    this.turn(Direction.DOWN);
+        if (y < 8 * 64) {
+            while (y != 9 * 64) {
+                if (direction != Direction.DOWN) {
+                    turn(Direction.DOWN);
                     return Action.TURN;
                 }
-                if (processTankInterception()) {
+                if (interception()) {
                     return Action.FIRE;
                 } else {
                     return Action.MOVE;
                 }
             }
         } else {
-            while (this.getY() != 7 * 64) {
-                if (this.direction != Direction.UP) {
-                    this.turn(Direction.UP);
+            while (y != 9 * 64) {
+                if (direction != Direction.UP) {
+                    turn(Direction.UP);
                     return Action.TURN;
                 }
-                if (processTankInterception()) {
+                if (interception()) {
                     return Action.FIRE;
                 } else {
                     return Action.MOVE;
@@ -135,6 +136,6 @@ public class BT7 extends AbstractTank {
         } else {
             img = img_right;
         }
-        g.drawImage(img, this.getX(), this.getY(), 64, 64, null);
+        g.drawImage(img, x, y, 64, 64, null);
     }
 }

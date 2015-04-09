@@ -24,7 +24,7 @@ import com.kademika.day8.frame21.BattleField.objects.tanks.bullet.Bullet;
 public class ActionField extends JPanel {
 
     private com.kademika.day8.frame21.BattleField.BattleField bf;
-    private T34 defender;
+    private Tiger defender;
     private Bullet bul;
     private BT7 agressor;
     private int[] randX = new int[]{64, 192, 320};
@@ -35,7 +35,7 @@ public class ActionField extends JPanel {
     public void runTheGame() throws Exception {
         // processAction(defender, bul, defender.setupTank());
         while (true) {
-            if (bf.scanQuadrant(7, 4) != null) {
+            if (bf.scanQuadrant(8, 4) != null) {
                 processAction(agressor, bul, agressor.setupTank());
 //				Thread.sleep(1000);
                 processAction(defender, bul, defender.setupTank());
@@ -83,18 +83,18 @@ public class ActionField extends JPanel {
 
         tank.turn(direction);
         if (processTankInterception(tank)) {
+//            processFire(tank, bul);
             System.out.println(tank.getClass() + " Illegal move");
-            return;
-        }
-
-        if (processTanksInterception(tank)) {
-            processFire(tank, bul);
-            System.out.println(tank.getClass() + " Killing Enemy");
             return;
         }
 
         while (covered < 64) {
 
+            if (processTanksInterception(tank)) {
+//                processFire(tank, bul);
+                System.out.println(tank.getClass() + " Killing Enemy");
+                return;
+            }
             bf.scanQuadrant(elemTankY, elemTankX);
 
             if (tank.getDirection() == Direction.UP) {
@@ -193,7 +193,7 @@ public class ActionField extends JPanel {
 
     }
 
-    public void proccessMoveRandom(Tank tank) throws Exception {
+  /*  public void proccessMoveRandom(Tank tank) throws Exception {
         Random r = new Random();
         Direction direction = Direction.values()[0];
         while (true) {
@@ -203,9 +203,9 @@ public class ActionField extends JPanel {
 //				tank.move();
             }
         }
-    }
+    }*/
 
-    public void proccessmoveToQuadrant(Tank tank, int x, int y)
+/*    public void proccessmoveToQuadrant(Tank tank, int x, int y)
             throws Exception {
 
         if (tank.getX() < x) {
@@ -232,7 +232,7 @@ public class ActionField extends JPanel {
             }
         }
 
-    }
+    }*/
 
     private boolean processInterception() /* throws Exception */ {
 
@@ -283,7 +283,11 @@ public class ActionField extends JPanel {
     }
 
     private boolean processTanksInterception(Tank tank) {
-        String koordinate = getQuadrant(tank.getX() + 32, tank.getY() + 32);
+
+        if (getQuadrant(agressor.getX(), agressor.getY()).equals(getQuadrant(defender.getX(), defender.getY()))) {
+            return true;
+        }
+   /*     String koordinate = getQuadrant(tank.getX() + 32, tank.getY() + 32);
         int delim = koordinate.indexOf("_");
         int elemY = Integer.parseInt(koordinate.substring(0, delim));
         int elemX = Integer.parseInt(koordinate.substring(delim + 1));
@@ -312,14 +316,15 @@ public class ActionField extends JPanel {
                 && (elemX + 1 == elemAgrX && elemY == elemAgrY || elemX + 1 == elemDefX
                 && elemY == elemDefY)) {
             return true;
-        }
+        }*/
 
         return false;
     }
 
     private boolean processTankInterception(Tank tank) {
 
-        String koordinate = getQuadrant(tank.getX() + 32, tank.getY() + 32);
+        return tank.interception();
+       /* String koordinate = getQuadrant(tank.getX() + 32, tank.getY() + 32);
         int delim = koordinate.indexOf("_");
         int elemY = Integer.parseInt(koordinate.substring(0, delim));
         int elemX = Integer.parseInt(koordinate.substring(delim + 1));
@@ -341,7 +346,7 @@ public class ActionField extends JPanel {
             }
 
         }
-        return false;
+        return false;*/
     }
 
     String getQuadrant(int x, int y) {
@@ -361,8 +366,10 @@ public class ActionField extends JPanel {
     public ActionField() throws Exception {
         bf = new com.kademika.day8.frame21.BattleField.BattleField();
         bf.generateBattleField();
-        defender = new T34(bf, 64, 448, Direction.UP);
+        defender = new Tiger(bf, 64, 448, Direction.UP);
         agressor = new BT7(bf, 64, 64, Direction.DOWN);
+        agressor.setEnemy(defender);
+        defender.setEnemy(agressor);
         bul = new Bullet(-100, -100, Direction.LEFT);
         JFrame frame = new JFrame("BATTLE FIELD, DAY 8");
         frame.setLocation(750, 150);

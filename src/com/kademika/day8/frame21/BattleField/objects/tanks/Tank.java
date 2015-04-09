@@ -5,13 +5,14 @@ import java.awt.Color;
 public interface Tank {
 
 	 public Action setupTank() throws Exception;
-	 public Color getColorTank();
+//	 public Color getColorTank();
 
-		public void setColorTank(Color colorTank);
-
-		public Color getColorTower();
-
-		public void setColorTower(Color colorTower);
+     public boolean interception();
+//		public void setColorTank(Color colorTank);
+//
+//		public Color getColorTower();
+//
+//		public void setColorTower(Color colorTower);
 
 		public int getX();
 
@@ -30,8 +31,8 @@ public interface Tank {
 
 		public void turn(Direction right) throws Exception;
 
-		public void fire() throws Exception;
+/*		public void fire() throws Exception;
 
-		public void moveToQuadrant(int v, int h) throws Exception;
+		public void moveToQuadrant(int v, int h) throws Exception;*/
 	 
 }

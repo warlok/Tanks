@@ -25,20 +25,16 @@ public class T34 extends AbstractTank {
 	
 	public T34(BattleField bf) {
 		super(bf);
-		colorTank = new java.awt.Color(0, 255, 0);
-		colorTower = new java.awt.Color(255,0, 0);
 		loadImage();
     
 	}
 
 	public T34(com.kademika.day8.frame21.BattleField.BattleField bf, int x, int y, Direction direction) {
 		super(bf,x,y,direction);
-		colorTank = new java.awt.Color(0, 255, 0);
-		colorTower = new java.awt.Color(255,0, 0);
 		loadImage();
 	}
 	
-	private void loadImage() {
+	protected void loadImage() {
 		try {
 			img_left = ImageIO.read(new File("T34_left.png"));
 
@@ -64,7 +60,9 @@ public class T34 extends AbstractTank {
 			System.err.println("Couldn't load image");
 		}
 	}
-	@Override
+
+
+    @Override
 	public void draw(Graphics g) {
 		BufferedImage img = null;
 //		bf.updateQuadrant(y/64, x/64, this);
@@ -77,7 +75,7 @@ public class T34 extends AbstractTank {
 		} else {
 			img = img_right;
 		}
-		g.drawImage(img, this.getX(), this.getY(), 64, 64, null);
+		g.drawImage(img, x, y, 64, 64, null);
 	}
 
 }

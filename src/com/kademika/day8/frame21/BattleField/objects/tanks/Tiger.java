@@ -22,21 +22,22 @@ public class Tiger extends AbstractTank {
 	
 	public Tiger(BattleField bf) {
 		super(bf);
-		colorTank = new java.awt.Color(255, 0, 0);
-		colorTower = new java.awt.Color(0,255, 0);
+//		colorTank = new java.awt.Color(255, 0, 0);
+//		colorTower = new java.awt.Color(0,255, 0);
 		armor=1;
 		loadImage();
 	}
 
 	public Tiger(BattleField bf, int x, int y, Direction direction) {
 		super(bf,x,y,direction);
-		colorTank = new java.awt.Color(255, 0, 0);
-		colorTower = new java.awt.Color(0,255, 0);
+//		colorTank = new java.awt.Color(255, 0, 0);
+//		colorTower = new java.awt.Color(0,255, 0);
 		armor=1;
 		loadImage();
 	}
 	
-	private void loadImage() {
+
+    protected void loadImage() {
 		try {
 			img_left = ImageIO.read(new File("tiger_left.png"));
 
@@ -71,7 +72,93 @@ public class Tiger extends AbstractTank {
 		this.armor = armor;
 	}
 
-	@Override
+    @Override
+    public void destroy() {
+       if (armor == 0) {
+           super.destroy();
+           return;
+       }
+        armor--;
+    }
+
+    @Override
+    public Action setupTank() throws Exception {
+        Action result = Action.NOTHING;
+        int enemyY = getQuadrant(enemy.getY());
+        int enemyX = getQuadrant(enemy.getX());
+        int tankX = getQuadrant(x);
+        int tankY = getQuadrant(y);
+
+
+        if (tankX == enemyX) {
+            if (tankY < enemyY) {
+                if (direction != Direction.DOWN) {
+                    turn(Direction.DOWN);
+                    return Action.TURN;
+                }
+            } else {
+                if (direction != Direction.UP) {
+                    turn(Direction.UP);
+                    return Action.TURN;
+                }
+            }
+            result = Action.FIRE;
+        } else if (tankY == enemyY) {
+            if (tankX < enemyX) {
+                if (direction != Direction.RIGHT) {
+                    turn(Direction.RIGHT);
+                    return Action.TURN;
+                }
+            } else {
+                if (direction != Direction.LEFT) {
+                    turn(Direction.LEFT);
+                    return Action.TURN;
+                }
+            }
+            result = Action.FIRE;
+        } else if (interception()){
+            result = Action.FIRE;
+        } else if (checkMinWay(enemyY, enemyX, tankX, tankY) && tankX < enemyX) {
+            if (direction != Direction.RIGHT) {
+                turn(Direction.RIGHT);
+                return Action.TURN;
+            }
+            result = Action.MOVE;
+        } else if (checkMinWay(enemyY, enemyX, tankX, tankY) && tankX > enemyX) {
+            if (direction != Direction.LEFT) {
+                turn(Direction.LEFT);
+                return Action.TURN;
+            }
+            result = Action.MOVE;
+        } else if ( tankY > enemyY) {
+            if (direction != Direction.LEFT) {
+                turn(Direction.DOWN);
+                return Action.TURN;
+            }
+            result = Action.MOVE;
+        } else if (tankY < enemyY) {
+            if (direction != Direction.UP) {
+                turn(Direction.UP);
+                return Action.TURN;
+            }
+            result = Action.MOVE;
+        }
+
+        return result;
+    }
+
+    public boolean checkMinWay(int enemyY, int enemyX, int tankX, int tankY) {
+        if (Math.abs(tankY - enemyY) > Math.abs(tankX - enemyX)) {
+            return true;
+        }
+        return false;
+    }
+
+    public int getQuadrant(int num) {
+        return num/64+1;
+    }
+
+    @Override
 	public void draw(Graphics g) {
 		BufferedImage img = null;
 		bf.updateQuadrant(y/64, x/64, this);
@@ -84,7 +171,7 @@ public class Tiger extends AbstractTank {
 		} else {
 			img = img_right;
 		}
-		g.drawImage(img, this.getX(), this.getY(), 64, 64, null);
+		g.drawImage(img, x, y, 64, 64, null);
 	}
 
 }
