@@ -261,8 +261,8 @@ public class ActionField extends JPanel {
     public ActionField() throws Exception {
         bf = new com.kademika.day8.frame21.BattleField.BattleField();
         bf.generateBattleField();
-        defender = new Tiger(bf, randCoordinate.nextInt(bf.getQuadrantsX()-1)*64, (randCoordinate.nextInt(bf.getQuadrantsY()-1))*64, Direction.UP);
-        agressor = new BT7(bf, randCoordinate.nextInt(bf.getQuadrantsX()-1)*64, (randCoordinate.nextInt(bf.getQuadrantsY()-1))*64, Direction.DOWN);
+        defender = new Tiger(bf, (bf.getQuadrantsX()/2+1)*64, (bf.getQuadrantsY()-1)*64, Direction.UP);
+        agressor = new BT7(bf, randCoordinate.nextInt(bf.getQuadrantsX()-1)*64, (randCoordinate.nextInt(bf.getQuadrantsY()-2))*64, Direction.DOWN);
         agressor.setEnemy(defender);
         defender.setEnemy(agressor);
         bf.updateQuadrant(defender.getY()/64,defender.getX()/64,null);
