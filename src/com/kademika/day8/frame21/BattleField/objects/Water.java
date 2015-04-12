@@ -36,7 +36,6 @@ public class Water extends AbstractObjects {
         Graphics2D g2d = (Graphics2D) g;
         Composite comp = g2d.getComposite();
         AlphaComposite alpha = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) 0.5);
-//        alpha.derive((float) 0.5);
         g2d.setComposite(alpha);
         g2d.drawImage(img, x, y, 64, 64, null);
         g2d.setComposite(comp);

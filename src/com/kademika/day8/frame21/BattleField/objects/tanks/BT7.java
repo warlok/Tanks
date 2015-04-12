@@ -22,16 +22,12 @@ public class BT7 extends AbstractTank {
     public BT7(BattleField bf) {
         super(bf);
         speed = super.speed / 2;
-//        colorTank = new java.awt.Color(255, 0, 0);
-//        colorTower = new java.awt.Color(0, 255, 0);
         loadImage();
     }
 
     public BT7(BattleField bf, int x, int y, Direction direction) {
         super(bf, x, y, direction);
         speed = super.speed / 2;
-//        colorTank = new java.awt.Color(255, 0, 0);
-//        colorTower = new java.awt.Color(0, 255, 0);
         loadImage();
     }
 
@@ -61,9 +57,6 @@ public class BT7 extends AbstractTank {
             System.err.println("Couldn't load image");
         }
     }
-//	public Action setupTank() throws Exception {
-//		return Action.FIRE;
-//	}
 
     @Override
     public Action setupTank() throws Exception {
@@ -126,7 +119,6 @@ public class BT7 extends AbstractTank {
     public void draw(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         BufferedImage img = null;
-//		bf.updateQuadrant(y/64, x/64, this);
         if (this.getDirection() == Direction.UP) {
             img = img_up;
         } else if (this.getDirection() == Direction.DOWN) {

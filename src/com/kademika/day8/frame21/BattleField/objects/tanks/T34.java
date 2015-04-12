@@ -65,7 +65,6 @@ public class T34 extends AbstractTank {
     @Override
 	public void draw(Graphics g) {
 		BufferedImage img = null;
-//		bf.updateQuadrant(y/64, x/64, this);
 		if (this.getDirection() == Direction.UP) {
 			img = img_up;
 		} else if (this.getDirection() == Direction.DOWN) {

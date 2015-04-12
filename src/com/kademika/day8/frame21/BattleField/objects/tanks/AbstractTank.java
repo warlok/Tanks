@@ -25,6 +25,7 @@ public abstract class AbstractTank implements Destroyable, Drawable, Tank {
 	protected Direction direction;
 	protected BattleField bf;
     protected Tank enemy;
+    protected boolean destroed = false;
 
     public void setEnemy(Tank enemy) {
         this.enemy = enemy;
@@ -32,7 +33,6 @@ public abstract class AbstractTank implements Destroyable, Drawable, Tank {
 
     public AbstractTank(BattleField bf) {
 		this.bf = bf;
-        loadImage();
 	}
 
 	public AbstractTank(BattleField bf, int x, int y, Direction direction) {
@@ -41,23 +41,6 @@ public abstract class AbstractTank implements Destroyable, Drawable, Tank {
 		this.y = y;
 		this.direction = direction;
 	}
-
-    protected abstract void loadImage();
-/*	public Color getColorTank() {
-		return colorTank;
-	}
-
-	public void setColorTank(Color colorTank) {
-		this.colorTank = colorTank;
-	}
-
-	public Color getColorTower() {
-		return colorTower;
-	}
-
-	public void setColorTower(Color colorTower) {
-		this.colorTower = colorTower;
-	}*/
 
 	public int getX() {
 		return x;
@@ -97,25 +80,18 @@ public abstract class AbstractTank implements Destroyable, Drawable, Tank {
 		}
 	}
 
-/*	public void fire() throws Exception {
-//		Bullet bullet = new Bullet(x + 25, y + 25, direction);
-	}*/
 
 	public void destroy() /* throws Exception */{
 		x = -100;
 		y = -100;
-		// Thread.sleep(3000);
-		// af.processDestroy(this);
+        destroed = true;
 	}
 
-/*	public void moveToQuadrant(int v, int h) throws Exception {
+    public boolean isDestroed() {
+        return destroed;
+    }
 
-		int newY = (v - 1) * 64;
-		int newX = (h - 1) * 64;
-
-	}*/
-
-	 public Action setupTank() throws Exception {
+    public Action setupTank() throws Exception {
 		 return Action.MOVE;
 		 }
 
@@ -152,77 +128,7 @@ public abstract class AbstractTank implements Destroyable, Drawable, Tank {
 
         }
         return false;
-			/*String koordinate = this.getQuadrant(this.getX() + 32, this.getY() + 32);
-			int delim = koordinate.indexOf("_");
-			int elemY = Integer.parseInt(koordinate.substring(0, delim));
-			int elemX = Integer.parseInt(koordinate.substring(delim + 1));
 
-			if (elemY >= 0 && elemX >= 0 && elemY < 9 && elemX < 9) {
-
-				*//*if (this.getDirection() == Direction.UP
-						&& bf.scanQuadrant(elemY - 1, elemX) != null) {
-					return true;
-				} else if (this.getDirection() == Direction.DOWN
-						&& bf.scanQuadrant(elemY + 1, elemX) != null) {
-					return true;
-				} else if (this.getDirection() == Direction.LEFT
-						&& bf.scanQuadrant(elemY, elemX - 1) != null) {
-					return true;
-				} else if (this.getDirection() == Direction.RIGHT
-						&& bf.scanQuadrant(elemY, elemX + 1) != null) {
-					return true;
-				}*//*
-                if (this.getDirection() == Direction.UP
-                        && bf.scanQuadrant(elemY - 1, elemX) != null && !(bf.scanQuadrant(elemY - 1, elemX) instanceof Water)) {
-                    return true;
-                } else if (this.getDirection() == Direction.DOWN
-                        && bf.scanQuadrant(elemY + 1, elemX) != null && !(bf.scanQuadrant(elemY + 1, elemX) instanceof Water)) {
-                    return true;
-                } else if (this.getDirection() == Direction.LEFT
-                        && bf.scanQuadrant(elemY, elemX - 1) != null && !(bf.scanQuadrant(elemY, elemX - 1) instanceof Water)) {
-                    return true;
-                } else if (this.getDirection() == Direction.RIGHT
-                        && bf.scanQuadrant(elemY, elemX + 1) != null && !(bf.scanQuadrant(elemY, elemX + 1) instanceof Water)) {
-                    return true;
-                }
-
-			}
-			return false;
-			*/
 		}
-
-/*	public void draw(Graphics g) {
-
-		BufferedImage tankImage = null;
-
-		bf.updateQuadrant(y/64, x/64, this);
-
-		if (this.getDirection() == Direction.UP) {
-			try {
-				tankImage = ImageIO.read(new File("tank2.png"));
-			} catch (IOException e) {
-				System.out.println("Couldn't load image");
-			}
-		} else if (this.getDirection() == Direction.DOWN) {
-			try {
-				tankImage = ImageIO.read(new File("tank2_down.png"));
-			} catch (IOException e) {
-				System.out.println("Couldn't load image");
-			}
-		} else if (this.getDirection() == Direction.LEFT) {
-			try {
-				tankImage = ImageIO.read(new File("tank2_left.png"));
-			} catch (IOException e) {
-				System.out.println("Couldn't load image");
-			}
-		} else {
-			try {
-				tankImage = ImageIO.read(new File("tank2_right.png"));
-			} catch (IOException e) {
-				System.out.println("Couldn't load image");
-			}
-		}
-		g.drawImage(tankImage, this.getX(), this.getY(), 64, 64, null);
-	}*/
 
 }

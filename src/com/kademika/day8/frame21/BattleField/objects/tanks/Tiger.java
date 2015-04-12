@@ -22,16 +22,12 @@ public class Tiger extends AbstractTank {
 	
 	public Tiger(BattleField bf) {
 		super(bf);
-//		colorTank = new java.awt.Color(255, 0, 0);
-//		colorTower = new java.awt.Color(0,255, 0);
 		armor=1;
 		loadImage();
 	}
 
 	public Tiger(BattleField bf, int x, int y, Direction direction) {
 		super(bf,x,y,direction);
-//		colorTank = new java.awt.Color(255, 0, 0);
-//		colorTower = new java.awt.Color(0,255, 0);
 		armor=1;
 		loadImage();
 	}
@@ -161,7 +157,6 @@ public class Tiger extends AbstractTank {
     @Override
 	public void draw(Graphics g) {
 		BufferedImage img = null;
-		bf.updateQuadrant(y/64, x/64, this);
 		if (this.getDirection() == Direction.UP) {
 			img = img_up;
 		} else if (this.getDirection() == Direction.DOWN) {

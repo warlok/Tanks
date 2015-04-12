@@ -11,6 +11,7 @@ import javax.swing.WindowConstants;
 import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
 
 import com.kademika.day8.frame21.BattleField.objects.AbstractObjects;
+import com.kademika.day8.frame21.BattleField.objects.Eagle;
 import com.kademika.day8.frame21.BattleField.objects.Water;
 import com.kademika.day8.frame21.BattleField.objects.tanks.Action;
 import com.kademika.day8.frame21.BattleField.objects.tanks.BT7;
@@ -27,21 +28,17 @@ public class ActionField extends JPanel {
     private Tiger defender;
     private Bullet bul;
     private BT7 agressor;
-    private int[] randX = new int[]{64, 192, 320};
-    private int[] randY = new int[]{64, 256, 384};
     Random randCoordinate = new Random();
-    private int armor;
 
     public void runTheGame() throws Exception {
         // processAction(defender, bul, defender.setupTank());
-        while (true) {
-            if (bf.scanQuadrant(8, 4) != null) {
+        while (!agressor.isDestroed() && !defender.isDestroed() && bf.scanQuadrant(bf.getQuadrantsY()-1, findEagle()) != null) {
                 processAction(agressor, bul, agressor.setupTank());
 //				Thread.sleep(1000);
                 processAction(defender, bul, defender.setupTank());
 //				Thread.sleep(1000);
-            }
         }
+        System.out.println("Game Over");
 
     }
 
@@ -54,10 +51,19 @@ public class ActionField extends JPanel {
                 processTurn(tank);
                 break;
             case FIRE:
-                processFire(tank, b);
+                processFire(tank);
                 break;
             default:
         }
+    }
+
+    public int findEagle() {
+        for (int i=0; i<bf.getQuadrantsX();i++) {
+            if (bf.scanQuadrant(bf.getQuadrantsY() - 1, i) instanceof Eagle) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public void processMove(Tank tank) throws Exception {
@@ -72,9 +78,9 @@ public class ActionField extends JPanel {
 
         // check limits x: 0, 513; y: 0, 513
         if ((tank.getDirection() == Direction.UP && tank.getY() == 0)
-                || (tank.getDirection() == Direction.DOWN && tank.getY() >= 512)
+                || (tank.getDirection() == Direction.DOWN && tank.getY() >= bf.getBF_HEIGHT())
                 || (tank.getDirection() == Direction.LEFT && tank.getX() == 0)
-                || (tank.getDirection() == Direction.RIGHT && tank.getX() >= 512)) {
+                || (tank.getDirection() == Direction.RIGHT && tank.getX() >= bf.getBF_WIDTH())) {
             System.out.println("[illegal move] direction: "
                     + tank.getDirection() + " tankX: " + tank.getX()
                     + ", tankY: " + tank.getY());
@@ -128,18 +134,13 @@ public class ActionField extends JPanel {
             Thread.sleep(tank.getSpeed());
         }
 
-//		bf.updateQuadrant(elemTankY, elemTankX, null);
-//		tankKoordinate = getQuadrant(tank.getX(), tank.getY());
-//		elemTankY = Integer.parseInt(tankKoordinate.substring(0, delim));
-//		elemTankX = Integer.parseInt(tankKoordinate.substring(delim + 1));
-//		bf.updateQuadrant(elemTankY, elemTankX, tank);
     }
 
     public void processTurn(Tank tank) throws Exception {
         repaint();
     }
 
-    public void processFire(Tank tank, Bullet bulllet) throws Exception {
+    public void processFire(Tank tank) throws Exception {
 
         bul.destroy();
         bul.setTank(tank);
@@ -149,7 +150,7 @@ public class ActionField extends JPanel {
         int step2 = 1;
 
         while (bul.getBulletX() > 0 && bul.getBulletY() > 0
-                && bul.getBulletX() < 576 && bul.getBulletY() < 576) {
+                && bul.getBulletX() < bf.getBF_WIDTH() && bul.getBulletY() < bf.getBF_HEIGHT()) {
 
             int step = 0;
 
@@ -182,8 +183,8 @@ public class ActionField extends JPanel {
                 }
                 step++;
                 if (processInterception() || bul.getBulletX() < 0
-                        && bul.getBulletY() < 0 || bul.getBulletX() > 576
-                        || bul.getBulletY() > 576) {
+                        && bul.getBulletY() < 0 || bul.getBulletX() > bf.getBF_WIDTH()
+                        || bul.getBulletY() > bf.getBF_HEIGHT()) {
                     bul.destroy();
                 }
                 repaint();
@@ -193,47 +194,6 @@ public class ActionField extends JPanel {
 
     }
 
-  /*  public void proccessMoveRandom(Tank tank) throws Exception {
-        Random r = new Random();
-        Direction direction = Direction.values()[0];
-        while (true) {
-            direction = Direction.values()[r.nextInt(5)];
-            if (direction != Direction.NONE) {
-                tank.turn(direction);
-//				tank.move();
-            }
-        }
-    }*/
-
-/*    public void proccessmoveToQuadrant(Tank tank, int x, int y)
-            throws Exception {
-
-        if (tank.getX() < x) {
-            while (tank.getX() != x) {
-                tank.turn(Direction.RIGHT);
-//				tank.move();
-            }
-        } else {
-            while (tank.getX() != x) {
-                tank.turn(Direction.LEFT);
-//				tank.move();
-            }
-        }
-
-        if (tank.getY() < y) {
-            while (tank.getY() != y) {
-                tank.turn(Direction.DOWN);
-//				tank.move();
-            }
-        } else {
-            while (tank.getY() != y) {
-                tank.turn(Direction.UP);
-//				tank.move();
-            }
-        }
-
-    }*/
-
     private boolean processInterception() /* throws Exception */ {
 
         String koordinate = getQuadrant(bul.getBulletX(), bul.getBulletY());
@@ -241,7 +201,7 @@ public class ActionField extends JPanel {
         int elemY = Integer.parseInt(koordinate.substring(0, delim));
         int elemX = Integer.parseInt(koordinate.substring(delim + 1));
 
-        if (elemY >= 0 && elemX >= 0 && elemY < 9 && elemX < 9) {
+        if (elemY >= 0 && elemX >= 0 && elemY < bf.getQuadrantsY() && elemX < bf.getQuadrantsX()) {
 
             if (getQuadrant(bul.getBulletX(), bul.getBulletY()).equals(getQuadrant(agressor.getX(), agressor.getY()))
                     && !(agressor.equals(bul.getTank()))) {
@@ -264,18 +224,6 @@ public class ActionField extends JPanel {
                     return true;
                 }
 
-                /*else if (bf.scanQuadrant(elemY, elemX) instanceof AbstractTank) {
-                    AbstractTank o = (AbstractTank) bf.scanQuadrant(elemY,
-							elemX);
-					if (!o.getClass().equals(tank.getClass())) {
-						o.destroy();
-						bf.updateQuadrant(elemY, elemX, null);
-						repaint();
-						return true;
-					}
-				}*/
-
-
             }
 
         }
@@ -287,36 +235,6 @@ public class ActionField extends JPanel {
         if (getQuadrant(agressor.getX(), agressor.getY()).equals(getQuadrant(defender.getX(), defender.getY()))) {
             return true;
         }
-   /*     String koordinate = getQuadrant(tank.getX() + 32, tank.getY() + 32);
-        int delim = koordinate.indexOf("_");
-        int elemY = Integer.parseInt(koordinate.substring(0, delim));
-        int elemX = Integer.parseInt(koordinate.substring(delim + 1));
-        String koordinateDef = getQuadrant(defender.getX() + 32,
-                defender.getY() + 32);
-        int elemDefY = Integer.parseInt(koordinateDef.substring(0, delim));
-        int elemDefX = Integer.parseInt(koordinateDef.substring(delim + 1));
-        String koordinateAgr = getQuadrant(agressor.getX() + 32,
-                agressor.getY() + 32);
-        int elemAgrY = Integer.parseInt(koordinateAgr.substring(0, delim));
-        int elemAgrX = Integer.parseInt(koordinateAgr.substring(delim + 1));
-
-        if (tank.getDirection() == Direction.UP
-                && (elemX == elemAgrX && elemY - 1 == elemAgrY || elemX == elemDefX
-                && elemY - 1 == elemDefY)) {
-            return true;
-        } else if (tank.getDirection() == Direction.DOWN
-                && (elemX == elemAgrX && elemY + 1 == elemAgrY || elemX == elemDefX
-                && elemY + 1 == elemDefY)) {
-            return true;
-        } else if (tank.getDirection() == Direction.LEFT
-                && (elemX - 1 == elemAgrX && elemY == elemAgrY || elemX - 1 == elemDefX
-                && elemY == elemDefY)) {
-            return true;
-        } else if (tank.getDirection() == Direction.RIGHT
-                && (elemX + 1 == elemAgrX && elemY == elemAgrY || elemX + 1 == elemDefX
-                && elemY == elemDefY)) {
-            return true;
-        }*/
 
         return false;
     }
@@ -324,34 +242,11 @@ public class ActionField extends JPanel {
     private boolean processTankInterception(Tank tank) {
 
         return tank.interception();
-       /* String koordinate = getQuadrant(tank.getX() + 32, tank.getY() + 32);
-        int delim = koordinate.indexOf("_");
-        int elemY = Integer.parseInt(koordinate.substring(0, delim));
-        int elemX = Integer.parseInt(koordinate.substring(delim + 1));
-
-        if (elemY >= 0 && elemX >= 0 && elemY < 9 && elemX < 9) {
-
-            if (tank.getDirection() == Direction.UP
-                    && bf.scanQuadrant(elemY - 1, elemX) != null && !(bf.scanQuadrant(elemY - 1, elemX) instanceof Water)) {
-                return true;
-            } else if (tank.getDirection() == Direction.DOWN
-                    && bf.scanQuadrant(elemY + 1, elemX) != null && !(bf.scanQuadrant(elemY + 1, elemX) instanceof Water)) {
-                return true;
-            } else if (tank.getDirection() == Direction.LEFT
-                    && bf.scanQuadrant(elemY, elemX - 1) != null && !(bf.scanQuadrant(elemY, elemX - 1) instanceof Water)) {
-                return true;
-            } else if (tank.getDirection() == Direction.RIGHT
-                    && bf.scanQuadrant(elemY, elemX + 1) != null && !(bf.scanQuadrant(elemY, elemX + 1) instanceof Water)) {
-                return true;
-            }
-
-        }
-        return false;*/
     }
 
     String getQuadrant(int x, int y) {
-        String result = "9_9";
-        if (x < 586 && x > 0 && y < 586 && y > 0) {
+        String result = bf.getQuadrantsY() + "_" + bf.getQuadrantsX();
+        if (x < bf.getBF_WIDTH() && x > 0 && y < bf.getBF_HEIGHT() && y > 0) {
             int quadrantX = x / 64;
             int quadrantY = y / 64;
             result = quadrantY + "_" + quadrantX;
@@ -366,13 +261,15 @@ public class ActionField extends JPanel {
     public ActionField() throws Exception {
         bf = new com.kademika.day8.frame21.BattleField.BattleField();
         bf.generateBattleField();
-        defender = new Tiger(bf, 64, 448, Direction.UP);
-        agressor = new BT7(bf, 64, 64, Direction.DOWN);
+        defender = new Tiger(bf, randCoordinate.nextInt(bf.getQuadrantsX()-1)*64, (randCoordinate.nextInt(bf.getQuadrantsY()-1))*64, Direction.UP);
+        agressor = new BT7(bf, randCoordinate.nextInt(bf.getQuadrantsX()-1)*64, (randCoordinate.nextInt(bf.getQuadrantsY()-1))*64, Direction.DOWN);
         agressor.setEnemy(defender);
         defender.setEnemy(agressor);
+        bf.updateQuadrant(defender.getY()/64,defender.getX()/64,null);
+        bf.updateQuadrant(agressor.getY() / 64,agressor.getX()/64,null);
         bul = new Bullet(-100, -100, Direction.LEFT);
         JFrame frame = new JFrame("BATTLE FIELD, DAY 8");
-        frame.setLocation(750, 150);
+        frame.setLocation(100, 0);
         frame.setMinimumSize(new Dimension(bf.getBF_WIDTH(),
                 bf.getBF_HEIGHT() + 22));
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

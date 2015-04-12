@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 
@@ -18,26 +19,63 @@ import com.kademika.day8.frame21.interfaces.Drawable;
 
 public class BattleField implements Drawable {
 
-	private int BF_WIDTH = 590;
-	private int BF_HEIGHT = 590;
+    private int size = 64;
 
-	private String[][] battleFieldString = new String[][] {
+    public int getQuadrantsX() {
+        return quadrantsX;
+    }
+
+    public int getQuadrantsY() {
+        return quadrantsY;
+    }
+
+    private int quadrantsX = 9;
+    private int quadrantsY = 8;
+
+	private int BF_WIDTH = quadrantsX*size;
+	private int BF_HEIGHT = quadrantsY*size;
+
+    private String[][] battleFieldString = new String[quadrantsY][quadrantsX];
+
+    public String generateElements(int n) {
+        String result = "";
+        if (n < 35) {
+            result = "B";
+        } else if (n>35 && n<50) {
+            result = "R";
+        } else if (n>50 && n < 60) {
+            result = "W";
+        }
+        return result;
+    }
+
+    public void generateBattleFieldString() {
+        Random rand = new Random();
+        for (int i=0; i<quadrantsY;i++){
+            for (int j=0; j<quadrantsX;j++) {
+                battleFieldString[i][j] = generateElements(rand.nextInt(100));
+            }
+        }
+        battleFieldString[quadrantsY-1][quadrantsX/2] = "E";
+    }
+
+	/*private String[][] battleFieldString = new String[][] {
 			{ "B", "B", "B", "B", "B", "B", "B", "B", "B" },
 			{ "B", "", "", "W", "W", "", "B", "", "B" },
-			{ "B", "R", "R", "", "R", "", "", "", "B" },
+			{ "B", "R", "R", "", "", "", "", "", "B" },
 			{ "B", "", "", "", "", "W", "B", "", "B" },
-			{ "B", "", "", "", "R", "", "", "", "B" },
+			{ "B", "", "", "", "", "", "", "", "B" },
 			{ "B", "B", "", "W", "", "", "W", "B", "B" },
 			{ "B", "W", "W", "", "", "B", "", "", "B" },
 			{ "B", "W", "W", "B", "B", "B", "", "", "B" },
-			{ "B", "B", "B", "B", "E", "B", "B", "B", "B" } };
+			{ "B", "B", "B", "B", "E", "B", "B", "B", "B" } };*/
 
 	private int dimX = battleFieldString[0].length;
 	private int dimY = battleFieldString.length;
 	private Object[][] battleField = new Object[dimY][dimX];
 
 	public BattleField() {
-
+        generateBattleFieldString();
 	}
 
 	public void generateBattleField() {
@@ -93,7 +131,7 @@ public class BattleField implements Drawable {
 	}
 
 	public Object scanQuadrant(int x, int y) {
-		if (x >= 0 && x < 9 && y >= 0 && y < 9) {
+		if (x >= 0 && x < quadrantsY && y >= 0 && y < quadrantsX) {
 		Object value = battleField[x][y];
 		return value;
 		} 
@@ -101,7 +139,7 @@ public class BattleField implements Drawable {
 	}
 
 	public void updateQuadrant(int x, int y, Object newValue) {
-		if (x > 0 && x < 9 && y > 0 && y < 9) {
+		if (x >= 0 && x < quadrantsY && y >= 0 && y < quadrantsX) {
 			battleField[x][y] = newValue;
 		}
 	}
