@@ -1,15 +1,15 @@
 package com.kademika.day8.frame21;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Random;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
+import javax.swing.tree.ExpandVetoException;
 
+import com.kademika.day8.frame21.BattleField.BattleField;
 import com.kademika.day8.frame21.BattleField.objects.AbstractObjects;
 import com.kademika.day8.frame21.BattleField.objects.Eagle;
 import com.kademika.day8.frame21.BattleField.objects.Water;
@@ -21,24 +21,45 @@ import com.kademika.day8.frame21.BattleField.objects.tanks.T34;
 import com.kademika.day8.frame21.BattleField.objects.tanks.Tank;
 import com.kademika.day8.frame21.BattleField.objects.tanks.Tiger;
 import com.kademika.day8.frame21.BattleField.objects.tanks.bullet.Bullet;
+import sun.rmi.runtime.NewThreadAction;
 
 public class ActionField extends JPanel {
 
+    private JFrame frame = new JFrame("BATTLE FIELD, DAY 8");
+    private JPanel mainPanel = this;
     private com.kademika.day8.frame21.BattleField.BattleField bf;
-    private Tiger defender;
+    private T34 defender;
     private Bullet bul;
-    private BT7 agressor;
-    Random randCoordinate = new Random();
+    private AbstractTank agressor;
+    private Random randCoordinate = new Random();
 
-    public void runTheGame() throws Exception {
+    public void runTheGame() {
         // processAction(defender, bul, defender.setupTank());
         while (!agressor.isDestroed() && !defender.isDestroed() && bf.scanQuadrant(bf.getQuadrantsY()-1, findEagle()) != null) {
+            try {
                 processAction(agressor, bul, agressor.setupTank());
-//				Thread.sleep(1000);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            try {
                 processAction(defender, bul, defender.setupTank());
-//				Thread.sleep(1000);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
+        gameOver();
         System.out.println("Game Over");
+
 
     }
 
@@ -258,24 +279,147 @@ public class ActionField extends JPanel {
         return (v - 1) * 64 + "_" + (h - 1) * 64;
     }
 
-    public ActionField() throws Exception {
-        bf = new com.kademika.day8.frame21.BattleField.BattleField();
+    public JPanel getPane() {
+        return this;
+    }
+
+    public void gameOver() {
+        JPanel panel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.setFont(new Font(Font.MONOSPACED,Font.BOLD,36));
+                g.drawString("Game Over",200,100);
+            }
+        };
+        JButton button = new JButton("Try Again");
+        panel.add(button);
+        frame.setContentPane(panel);
+//        frame.getRootPane().add(panel);
+        frame.pack();
+        frame.repaint();
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                restartGame();
+            }
+        });
+    }
+
+    public void restartGame() {
+        bf = new BattleField();
         bf.generateBattleField();
-        defender = new Tiger(bf, (bf.getQuadrantsX()/2+1)*64, (bf.getQuadrantsY()-1)*64, Direction.UP);
+
+        defender = new T34(bf, (bf.getQuadrantsX()/2+1)*64, (bf.getQuadrantsY()-1)*64, Direction.UP);
+        defender.setEnemy(agressor);
         agressor = new BT7(bf, randCoordinate.nextInt(bf.getQuadrantsX()-1)*64, (randCoordinate.nextInt(bf.getQuadrantsY()-2))*64, Direction.DOWN);
         agressor.setEnemy(defender);
-        defender.setEnemy(agressor);
-        bf.updateQuadrant(defender.getY()/64,defender.getX()/64,null);
-        bf.updateQuadrant(agressor.getY() / 64,agressor.getX()/64,null);
+
         bul = new Bullet(-100, -100, Direction.LEFT);
-        JFrame frame = new JFrame("BATTLE FIELD, DAY 8");
-        frame.setLocation(100, 0);
+//        runTheGame();
+        bf.updateQuadrant(agressor.getY() / 64, agressor.getX() / 64, null);
+        bf.updateQuadrant(defender.getY()/64,defender.getX()/64,null);
+        frame.setContentPane(mainPanel);
+        frame.pack();
+        frame.repaint();
+//        runTheGame();
+    }
+
+
+    public ActionField() throws Exception {
+
+        final JLayeredPane layeredPane = new JLayeredPane();
+        final JRadioButton bt7Button = new JRadioButton("BT7 faster tank",true);
+        final JRadioButton tigerButton = new JRadioButton("Tiger with good armor");
+        JButton go = new JButton("Go");
+        final JButton start = new JButton("Start Game");
+        start.setVisible(true);
+        final Icon icon1 = new ImageIcon("BT7_up.png");
+        final Icon icon2 = new ImageIcon("tiger_up.png");
+        final JLabel picture = new JLabel();
+
+        JPanel panel = new JPanel(new BorderLayout());
+        final JPanel mainPanel = this;
+        mainPanel.setLayout(new FlowLayout());
+        mainPanel.add(start);
+        JPanel radioPanel = new JPanel(new GridLayout(0, 1));
+
+        layeredPane.add(panel,0);
+
+        picture.setIcon(icon1);
+
+        bf = new BattleField();
+        bf.generateBattleField();
+
+        defender = new T34(bf, (bf.getQuadrantsX()/2+1)*64, (bf.getQuadrantsY()-1)*64, Direction.UP);
+        defender.setEnemy(agressor);
+        agressor = new BT7(bf, randCoordinate.nextInt(bf.getQuadrantsX()-1)*64, (randCoordinate.nextInt(bf.getQuadrantsY()-2))*64, Direction.DOWN);
+        agressor.setEnemy(defender);
+
+        bul = new Bullet(-100, -100, Direction.LEFT);
+
+        bf.updateQuadrant(agressor.getY() / 64, agressor.getX() / 64, null);
+        bf.updateQuadrant(defender.getY()/64,defender.getX()/64,null);
+
+        radioPanel.add(bt7Button);
+        radioPanel.add(tigerButton);
+        panel.add(radioPanel,BorderLayout.LINE_START);
+        panel.add(picture, BorderLayout.CENTER);
+        panel.add(go,BorderLayout.AFTER_LAST_LINE);
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        frame.setContentPane(layeredPane);
+        frame.setLocation(1300, 100);
         frame.setMinimumSize(new Dimension(bf.getBF_WIDTH(),
                 bf.getBF_HEIGHT() + 22));
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.getContentPane().add(this);
         frame.pack();
         frame.setVisible(true);
+
+        bt7Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                picture.setIcon(icon1);
+                tigerButton.setSelected(false);
+                agressor = new BT7(bf, randCoordinate.nextInt(bf.getQuadrantsX()-1)*64, (randCoordinate.nextInt(bf.getQuadrantsY()-2))*64, Direction.DOWN);
+                agressor.setEnemy(defender);
+                bf.updateQuadrant(agressor.getY() / 64,agressor.getX()/64,null);
+            }
+        });
+
+        tigerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                picture.setIcon(icon2);
+                bt7Button.setSelected(false);
+                agressor = new Tiger(bf, randCoordinate.nextInt(bf.getQuadrantsX()-1)*64, (randCoordinate.nextInt(bf.getQuadrantsY()-2))*64, Direction.DOWN);
+                agressor.setEnemy(defender);
+                bf.updateQuadrant(agressor.getY() / 64,agressor.getX()/64,null);
+            }
+        });
+
+        start.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                start.setVisible(false);
+//                start.invalidate();
+                layeredPane.add(mainPanel,2);
+                runTheGame();
+            }
+        });
+
+        go.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.getContentPane().removeAll();
+                frame.setContentPane(mainPanel);
+                frame.repaint();
+                frame.pack();
+                repaint();
+//                runTheGame();
+            }
+        });
+
     }
 
     @Override

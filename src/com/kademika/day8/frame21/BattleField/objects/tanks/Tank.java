@@ -21,7 +21,10 @@ public interface Tank {
 		public void updateX(int x);
 
 		public void updateY(int y);
-
+        public boolean isDestroed();
 		public void turn(Direction right) throws Exception;
 
+//        public void destroy();
+//
+//    public void setEnemy(Tank tank);
 }

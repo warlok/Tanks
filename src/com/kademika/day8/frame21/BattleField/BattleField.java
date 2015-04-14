@@ -32,7 +32,7 @@ public class BattleField implements Drawable {
     private int quadrantsX = 9;
     private int quadrantsY = 8;
 
-	private int BF_WIDTH = quadrantsX*size;
+    private int BF_WIDTH = quadrantsX*size;
 	private int BF_HEIGHT = quadrantsY*size;
 
     private String[][] battleFieldString = new String[quadrantsY][quadrantsX];
@@ -161,5 +161,13 @@ public class BattleField implements Drawable {
 	public int getBF_HEIGHT() {
 		return BF_HEIGHT;
 	}
+
+//    public void setQuadrantsX(int quadrantsX) {
+//        this.quadrantsX = quadrantsX;
+//    }
+//
+//    public void setQuadrantsY(int quadrantsY) {
+//        this.quadrantsY = quadrantsY;
+//    }
 
 }
