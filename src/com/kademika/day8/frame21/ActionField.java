@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Observable;
 import java.util.Random;
 
 import javax.swing.*;
@@ -26,7 +27,7 @@ import com.kademika.day8.frame21.BattleField.objects.tanks.Tiger;
 import com.kademika.day8.frame21.BattleField.objects.tanks.bullet.Bullet;
 import sun.rmi.runtime.NewThreadAction;
 
-public class ActionField extends JPanel {
+public class ActionField {
 
     private JTextField dimentionX;
     private JTextField dimentionY;
@@ -39,7 +40,16 @@ public class ActionField extends JPanel {
     private JFrame startFrame = new JFrame("BATTLE FIELD, DAY 8");
     private JFrame gameFrame = new JFrame("BATTLE FIELD, DAY 8");
     private JFrame endFrame = new JFrame("BATTLE FIELD, DAY 8");
-    private JPanel mainPanel = this;
+    private JPanel mainPanel = new JPanel() {
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            bf.draw(g);
+            agressor.draw(g);
+            defender.draw(g);
+            bul.draw(g);
+        }
+    };
     private com.kademika.day8.frame21.BattleField.BattleField bf;
     private T34 defender;
     private Bullet bul;
@@ -72,8 +82,6 @@ public class ActionField extends JPanel {
         }
         gameOver();
         System.out.println("Game Over");
-
-
     }
 
     public void processAction(Tank tank, Bullet b, Action a) throws Exception {
@@ -164,14 +172,17 @@ public class ActionField extends JPanel {
             }
 
             covered += step;
-            repaint();
+//            mainPanel.repaint();
+            mainPanel.validate();
+
             Thread.sleep(tank.getSpeed());
         }
 
     }
 
     public void processTurn(Tank tank) throws Exception {
-        repaint();
+//        mainPanel.repaint();
+        mainPanel.validate();
     }
 
     public void processFire(Tank tank) throws Exception {
@@ -221,7 +232,8 @@ public class ActionField extends JPanel {
                         || bul.getBulletY() > bf.getBF_HEIGHT()) {
                     bul.destroy();
                 }
-                repaint();
+//                mainPanel.repaint();
+                mainPanel.validate();
                 Thread.sleep(bul.getSpeed());
             }
         }
@@ -240,12 +252,14 @@ public class ActionField extends JPanel {
             if (getQuadrant(bul.getBulletX(), bul.getBulletY()).equals(getQuadrant(agressor.getX(), agressor.getY()))
                     && !(agressor.equals(bul.getTank()))) {
                 agressor.destroy();
-                repaint();
+                mainPanel.validate();
+//                mainPanel.repaint();
                 return true;
             } else if (getQuadrant(bul.getBulletX(), bul.getBulletY()).equals(getQuadrant(defender.getX(), defender.getY()))
                     && !(defender.equals(bul.getTank()))) {
                 defender.destroy();
-                repaint();
+//                mainPanel.repaint();
+                mainPanel.validate();
                 return true;
             } else if (bf.scanQuadrant(elemY, elemX) != null && !(bf.scanQuadrant(elemY, elemX) instanceof Water)) {
 
@@ -254,7 +268,9 @@ public class ActionField extends JPanel {
                             elemY, elemX);
                     o.destroy();
                     bf.updateQuadrant(elemY, elemX, null);
-                    repaint();
+//                    mainPanel.repaint();
+                    mainPanel.validate();
+
                     return true;
                 }
 
@@ -289,6 +305,7 @@ public class ActionField extends JPanel {
     }
 
     public void gameOver() {
+
         JPanel panel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -325,7 +342,10 @@ public class ActionField extends JPanel {
 
 
     public ActionField() throws Exception {
+        drawGUI();
+    }
 
+    public void drawGUI() {
         bt7Button = new JRadioButton("BT7 faster tank",true);
         tigerButton = new JRadioButton("Tiger with good armor");
         go = new JButton("GO");
@@ -371,9 +391,6 @@ public class ActionField extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 picture.setIcon(icon1);
                 tigerButton.setSelected(false);
-
-                agressor.setEnemy(defender);
-                bf.updateQuadrant(agressor.getY() / 64, agressor.getX() / 64, null);
             }
         });
 
@@ -410,32 +427,18 @@ public class ActionField extends JPanel {
                 gameFrame.pack();
                 startFrame.setVisible(false);
                 mainPanel.repaint();
+                gameFrame.repaint();
                 gameFrame.setVisible(true);
+                gameFrame.revalidate();
+
             }
         });
-
-        gameFrame.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentShown(ComponentEvent e) {
-                runTheGame();
-            }
-        });
-
     }
 
     public void initVars() {
         bf = new BattleField();
         bf.generateBattleField();
         bul = new Bullet(-100, -100, Direction.LEFT);
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        bf.draw(g);
-        agressor.draw(g);
-        defender.draw(g);
-        bul.draw(g);
     }
 
 }
