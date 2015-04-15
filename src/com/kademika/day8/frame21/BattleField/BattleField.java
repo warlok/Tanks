@@ -20,22 +20,30 @@ import com.kademika.day8.frame21.interfaces.Drawable;
 public class BattleField implements Drawable {
 
     private int size = 64;
-
-    public int getQuadrantsX() {
-        return quadrantsX;
-    }
-
-    public int getQuadrantsY() {
-        return quadrantsY;
-    }
-
     private int quadrantsX = 9;
-    private int quadrantsY = 8;
+    private int quadrantsY = 9;
 
     private int BF_WIDTH = quadrantsX*size;
 	private int BF_HEIGHT = quadrantsY*size;
 
     private String[][] battleFieldString = new String[quadrantsY][quadrantsX];
+    private Object[][] battleField = new Object[quadrantsY][quadrantsX];
+
+	/*private String[][] battleFieldString = new String[][] {
+			{ "B", "B", "B", "B", "B", "B", "B", "B", "B" },
+			{ "B", "", "", "W", "W", "", "B", "", "B" },
+			{ "B", "R", "R", "", "", "", "", "", "B" },
+			{ "B", "", "", "", "", "W", "B", "", "B" },
+			{ "B", "", "", "", "", "", "", "", "B" },
+			{ "B", "B", "", "W", "", "", "W", "B", "B" },
+			{ "B", "W", "W", "", "", "B", "", "", "B" },
+			{ "B", "W", "W", "B", "B", "B", "", "", "B" },
+			{ "B", "B", "B", "B", "E", "B", "B", "B", "B" } };*/
+
+
+	public BattleField() {
+        generateBattleFieldString();
+	}
 
     public String generateElements(int n) {
         String result = "";
@@ -50,6 +58,7 @@ public class BattleField implements Drawable {
     }
 
     public void generateBattleFieldString() {
+        battleFieldString = new String[quadrantsY][quadrantsX];
         Random rand = new Random();
         for (int i=0; i<quadrantsY;i++){
             for (int j=0; j<quadrantsX;j++) {
@@ -59,28 +68,10 @@ public class BattleField implements Drawable {
         battleFieldString[quadrantsY-1][quadrantsX/2] = "E";
     }
 
-	/*private String[][] battleFieldString = new String[][] {
-			{ "B", "B", "B", "B", "B", "B", "B", "B", "B" },
-			{ "B", "", "", "W", "W", "", "B", "", "B" },
-			{ "B", "R", "R", "", "", "", "", "", "B" },
-			{ "B", "", "", "", "", "W", "B", "", "B" },
-			{ "B", "", "", "", "", "", "", "", "B" },
-			{ "B", "B", "", "W", "", "", "W", "B", "B" },
-			{ "B", "W", "W", "", "", "B", "", "", "B" },
-			{ "B", "W", "W", "B", "B", "B", "", "", "B" },
-			{ "B", "B", "B", "B", "E", "B", "B", "B", "B" } };*/
-
-	private int dimX = battleFieldString[0].length;
-	private int dimY = battleFieldString.length;
-	private Object[][] battleField = new Object[dimY][dimX];
-
-	public BattleField() {
-        generateBattleFieldString();
-	}
-
 	public void generateBattleField() {
-		for (int j = 0; j < getDimentionY(); j++) {
-			for (int k = 0; k < getDimentionX(); k++) {
+
+		for (int j = 0; j < quadrantsY; j++) {
+			for (int k = 0; k < quadrantsX; k++) {
 				String XY = getQuadrantXY(j + 1, k + 1);
 				int separator = XY.indexOf("_");
 				int x = Integer.parseInt(XY.substring(separator + 1));
@@ -126,9 +117,9 @@ public class BattleField implements Drawable {
 		return (v - 1) * 64 + "_" + (h - 1) * 64;
 	}
 
-	public BattleField(Object[][] battleField) {
-		this.battleField = battleField;
-	}
+//	public BattleField(Object[][] battleField) {
+//		this.battleField = battleField;
+//	}
 
 	public Object scanQuadrant(int x, int y) {
 		if (x >= 0 && x < quadrantsY && y >= 0 && y < quadrantsX) {
@@ -144,30 +135,31 @@ public class BattleField implements Drawable {
 		}
 	}
 
-	public int getDimentionX() {
-		int value = battleField[0].length;
-		return value;
-	}
+    public int getQuadrantsX() {
+        return quadrantsX;
+    }
 
-	public int getDimentionY() {
-		int value = battleField.length;
-		return value;
-	}
+    public int getQuadrantsY() {
+        return quadrantsY;
+    }
 
-	public int getBF_WIDTH() {
+    public void setQuadrantsXY(int quadrantsX,int quadrantsY) {
+        this.quadrantsX = quadrantsX;
+        this.quadrantsY = quadrantsY;
+        BF_WIDTH = quadrantsX*size;
+        battleFieldString = new String[quadrantsY][quadrantsX];
+        battleField = new Object[quadrantsY][quadrantsX];
+        BF_WIDTH = quadrantsX*size;
+        BF_HEIGHT = quadrantsY*size;
+        generateBattleFieldString();
+    }
+
+    public int getBF_WIDTH() {
 		return BF_WIDTH;
 	}
 
 	public int getBF_HEIGHT() {
 		return BF_HEIGHT;
 	}
-
-//    public void setQuadrantsX(int quadrantsX) {
-//        this.quadrantsX = quadrantsX;
-//    }
-//
-//    public void setQuadrantsY(int quadrantsY) {
-//        this.quadrantsY = quadrantsY;
-//    }
 
 }

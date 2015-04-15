@@ -24,7 +24,4 @@ public interface Tank {
         public boolean isDestroed();
 		public void turn(Direction right) throws Exception;
 
-//        public void destroy();
-//
-//    public void setEnemy(Tank tank);
 }
