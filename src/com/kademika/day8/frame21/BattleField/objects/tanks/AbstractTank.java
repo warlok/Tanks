@@ -110,7 +110,7 @@ public abstract class AbstractTank implements Destroyable, Drawable, Tank {
         int elemY = Integer.parseInt(koordinate.substring(0, delim));
         int elemX = Integer.parseInt(koordinate.substring(delim + 1));
 
-        if (elemY >= 0 && elemX >= 0 && elemY < 9 && elemX < 9) {
+        if (elemY >= 0 && elemX >= 0 && elemY < bf.getQuadrantsY() && elemX < bf.getQuadrantsX()) {
 
             if (direction == Direction.UP
                     && bf.scanQuadrant(elemY - 1, elemX) != null && !(bf.scanQuadrant(elemY - 1, elemX) instanceof Water)) {

@@ -56,9 +56,10 @@ public class ActionField {
     private AbstractTank agressor;
     private Random randCoordinate = new Random();
 
+
     public void runTheGame() {
         // processAction(defender, bul, defender.setupTank());
-        while (!agressor.isDestroed() && !defender.isDestroed() && bf.scanQuadrant(bf.getQuadrantsY()-1, findEagle()) != null) {
+        while (!agressor.isDestroed() && !defender.isDestroed() && bf.scanQuadrant(bf.getQuadrantsY() - 1, findEagle()) != null) {
             try {
                 processAction(agressor, bul, agressor.setupTank());
             } catch (Exception e) {
@@ -100,7 +101,7 @@ public class ActionField {
     }
 
     public int findEagle() {
-        for (int i=0; i<bf.getQuadrantsX();i++) {
+        for (int i = 0; i < bf.getQuadrantsX(); i++) {
             if (bf.scanQuadrant(bf.getQuadrantsY() - 1, i) instanceof Eagle) {
                 return i;
             }
@@ -172,8 +173,7 @@ public class ActionField {
             }
 
             covered += step;
-//            mainPanel.repaint();
-            mainPanel.validate();
+            mainPanel.repaint();
 
             Thread.sleep(tank.getSpeed());
         }
@@ -181,8 +181,8 @@ public class ActionField {
     }
 
     public void processTurn(Tank tank) throws Exception {
-//        mainPanel.repaint();
-        mainPanel.validate();
+        mainPanel.repaint();
+
     }
 
     public void processFire(Tank tank) throws Exception {
@@ -232,8 +232,8 @@ public class ActionField {
                         || bul.getBulletY() > bf.getBF_HEIGHT()) {
                     bul.destroy();
                 }
-//                mainPanel.repaint();
-                mainPanel.validate();
+                mainPanel.repaint();
+
                 Thread.sleep(bul.getSpeed());
             }
         }
@@ -252,14 +252,14 @@ public class ActionField {
             if (getQuadrant(bul.getBulletX(), bul.getBulletY()).equals(getQuadrant(agressor.getX(), agressor.getY()))
                     && !(agressor.equals(bul.getTank()))) {
                 agressor.destroy();
-                mainPanel.validate();
-//                mainPanel.repaint();
+
+                mainPanel.repaint();
                 return true;
             } else if (getQuadrant(bul.getBulletX(), bul.getBulletY()).equals(getQuadrant(defender.getX(), defender.getY()))
                     && !(defender.equals(bul.getTank()))) {
                 defender.destroy();
-//                mainPanel.repaint();
-                mainPanel.validate();
+                mainPanel.repaint();
+
                 return true;
             } else if (bf.scanQuadrant(elemY, elemX) != null && !(bf.scanQuadrant(elemY, elemX) instanceof Water)) {
 
@@ -268,8 +268,8 @@ public class ActionField {
                             elemY, elemX);
                     o.destroy();
                     bf.updateQuadrant(elemY, elemX, null);
-//                    mainPanel.repaint();
-                    mainPanel.validate();
+                    mainPanel.repaint();
+
 
                     return true;
                 }
@@ -310,11 +310,11 @@ public class ActionField {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                g.setFont(new Font(Font.MONOSPACED,Font.BOLD,36));
-                g.drawString("Game Over",200,100);
+                g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 36));
+                g.drawString("Game Over", 200, 100);
             }
         };
-        endFrame.setLocation(1300, 100);
+        endFrame.setLocation(100, 100);
         endFrame.setMinimumSize(new Dimension(bf.getBF_WIDTH(),
                 bf.getBF_HEIGHT() + 22));
         endFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -346,7 +346,7 @@ public class ActionField {
     }
 
     public void drawGUI() {
-        bt7Button = new JRadioButton("BT7 faster tank",true);
+        bt7Button = new JRadioButton("BT7 faster tank", true);
         tigerButton = new JRadioButton("Tiger with good armor");
         go = new JButton("GO");
         icon1 = new ImageIcon("BT7_up.png");
@@ -362,8 +362,8 @@ public class ActionField {
 
         JLabel labelX = new JLabel("X Dimention: ");
         JLabel labelY = new JLabel("Y Dimention: ");
-        dimentionX = new JTextField("9",5);
-        dimentionY = new JTextField("9",5);
+        dimentionX = new JTextField("9", 5);
+        dimentionY = new JTextField("9", 5);
         dimentionPanel.add(labelX);
         dimentionPanel.add(dimentionX);
         dimentionPanel.add(labelY);
@@ -372,14 +372,14 @@ public class ActionField {
         radioPanel.add(bt7Button);
         radioPanel.add(tigerButton);
 
-        panel.add(dimentionPanel,BorderLayout.BEFORE_FIRST_LINE);
-        panel.add(radioPanel,BorderLayout.LINE_START);
+        panel.add(dimentionPanel, BorderLayout.BEFORE_FIRST_LINE);
+        panel.add(radioPanel, BorderLayout.LINE_START);
         panel.add(picture, BorderLayout.CENTER);
-        panel.add(go,BorderLayout.AFTER_LAST_LINE);
+        panel.add(go, BorderLayout.AFTER_LAST_LINE);
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         startFrame.setContentPane(panel);
-        startFrame.setLocation(1300, 100);
+        startFrame.setLocation(100, 100);
         startFrame.setMinimumSize(new Dimension(bf.getBF_WIDTH(),
                 bf.getBF_HEIGHT() + 22));
         startFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -403,35 +403,44 @@ public class ActionField {
         });
 
         go.addActionListener(new ActionListener() {
+
             @Override
             public void actionPerformed(ActionEvent e) {
-                bf.setQuadrantsXY(Integer.valueOf(dimentionX.getText()),Integer.valueOf(dimentionY.getText()));
+
+
+                bf.setQuadrantsXY(Integer.valueOf(dimentionX.getText()), Integer.valueOf(dimentionY.getText()));
                 bf.generateBattleField();
 
-                defender = new T34(bf, (bf.getQuadrantsX()/2+1)*64, (bf.getQuadrantsY()-1)*64, Direction.UP);
+                defender = new T34(bf, (bf.getQuadrantsX() / 2 + 1) * 64, (bf.getQuadrantsY() - 1) * 64, Direction.UP);
                 defender.setEnemy(agressor);
                 if (tigerButton.isSelected()) {
-                    agressor = new Tiger(bf, randCoordinate.nextInt(bf.getQuadrantsX() - 1) * 64, (randCoordinate.nextInt(bf.getQuadrantsY() - 2)) * 64, Direction.DOWN);
+                    agressor = new Tiger(bf, randCoordinate.nextInt(bf.getQuadrantsX() - 1) * 64, (randCoordinate.nextInt(bf.getQuadrantsY()/2)) * 64, Direction.DOWN);
                 } else {
-                    agressor = new BT7(bf, randCoordinate.nextInt(bf.getQuadrantsX() - 1) * 64, (randCoordinate.nextInt(bf.getQuadrantsY() - 2)) * 64, Direction.DOWN);
+                    agressor = new BT7(bf, randCoordinate.nextInt(bf.getQuadrantsX() - 1) * 64, (randCoordinate.nextInt(bf.getQuadrantsY()/2)) * 64, Direction.DOWN);
                 }
                 agressor.setEnemy(defender);
-                bf.updateQuadrant(agressor.getY()/64, agressor.getX()/64, null);
-                bf.updateQuadrant(defender.getY()/64, defender.getX()/64, null);
-
+                bf.updateQuadrant(agressor.getY() / 64, agressor.getX() / 64, null);
+                bf.updateQuadrant(defender.getY() / 64, defender.getX() / 64, null);
                 gameFrame.setContentPane(mainPanel);
-                gameFrame.setLocation(1300, 100);
+                gameFrame.setLocation(100, 100);
                 gameFrame.setMinimumSize(new Dimension(bf.getBF_WIDTH(),
                         bf.getBF_HEIGHT() + 22));
                 gameFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
                 gameFrame.pack();
                 startFrame.setVisible(false);
-                mainPanel.repaint();
                 gameFrame.repaint();
                 gameFrame.setVisible(true);
                 gameFrame.revalidate();
+                new Thread() {
+                    @Override
+                    public void run() {
+                        runTheGame();
+                    }
+                }.start();
+
 
             }
+
         });
     }
 
