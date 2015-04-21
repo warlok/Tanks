@@ -4,6 +4,7 @@ import com.kademika.day8.frame21.BattleField.BattleField;
 import com.kademika.day8.frame21.BattleField.objects.tanks.Direction;
 import com.kademika.day8.frame21.interfaces.Destroyable;
 import com.kademika.day8.frame21.interfaces.Drawable;
+import com.sun.org.apache.xpath.internal.SourceTree;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -67,7 +68,7 @@ public class BT7 extends AbstractTank {
                     turn(Direction.RIGHT);
                     return Action.TURN;
                 }
-                if (interception()) {
+                if (interception() || tanksInterception()) {
                     return Action.FIRE;
                 } else {
                     return Action.MOVE;
@@ -79,7 +80,7 @@ public class BT7 extends AbstractTank {
                     turn(Direction.LEFT);
                     return Action.TURN;
                 }
-                if (interception()) {
+                if (interception() || tanksInterception()) {
                     return Action.FIRE;
                 } else {
                     return Action.MOVE;
@@ -93,7 +94,7 @@ public class BT7 extends AbstractTank {
                     turn(Direction.DOWN);
                     return Action.TURN;
                 }
-                if (interception()) {
+                if (interception() || tanksInterception()) {
                     return Action.FIRE;
                 } else {
                     return Action.MOVE;
@@ -105,7 +106,7 @@ public class BT7 extends AbstractTank {
                     turn(Direction.UP);
                     return Action.TURN;
                 }
-                if (interception()) {
+                if (interception() || tanksInterception()) {
                     return Action.FIRE;
                 } else {
                     return Action.MOVE;

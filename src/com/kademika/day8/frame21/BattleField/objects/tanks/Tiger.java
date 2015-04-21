@@ -112,7 +112,7 @@ public class Tiger extends AbstractTank {
                 }
             }
             result = Action.FIRE;
-        } else if (interception()){
+        } else if (interception() || tanksInterception()){
             result = Action.FIRE;
         } else if (checkMinWay(enemyY, enemyX, tankX, tankY) && tankX < enemyX) {
             if (direction != Direction.RIGHT) {

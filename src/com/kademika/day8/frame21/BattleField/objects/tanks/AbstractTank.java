@@ -1,8 +1,7 @@
 package com.kademika.day8.frame21.BattleField.objects.tanks;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.*;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +17,8 @@ import com.kademika.day8.frame21.interfaces.Drawable;
 
 public abstract class AbstractTank implements Destroyable, Drawable, Tank {
 
-
+	private Shape shape;
+	private Dimension dimention;
 	protected int speed = 10;
 	protected int x;
 	protected int y;
@@ -33,6 +33,8 @@ public abstract class AbstractTank implements Destroyable, Drawable, Tank {
 
     public AbstractTank(BattleField bf) {
 		this.bf = bf;
+		dimention = new Dimension(64, 64);
+		shape = new Rectangle(new Point(x, y), dimention);
 	}
 
 	public AbstractTank(BattleField bf, int x, int y, Direction direction) {
@@ -91,17 +93,38 @@ public abstract class AbstractTank implements Destroyable, Drawable, Tank {
         return destroed;
     }
 
-    public Action setupTank() throws Exception {
+	public Shape getShape() {
+		return shape;
+	}
+
+	public Action setupTank() throws Exception {
 		 return Action.MOVE;
 		 }
 
-		String getQuadrant(int x, int y) {
-
-			int quadrantX = x / 64;
-			int quadrantY = y / 64;
-			String result = quadrantY + "_" + quadrantX;
+	public String getQuadrant(int x, int y) {
+			String result = bf.getQuadrantsY()+1 + "_" + bf.getQuadrantsX()+1;
+			if (x < bf.getBF_WIDTH() && x > 0 && y < bf.getBF_HEIGHT() && y > 0) {
+				int quadrantX = x / 64;
+				int quadrantY = y / 64;
+				result = quadrantY + "_" + quadrantX;
+			}
 			return result;
 		}
+
+	public boolean tanksInterception() {
+
+		if (direction == Direction.DOWN
+				&& (getQuadrant(enemy.getX(), enemy.getY()).equals(getQuadrant(x, y+64)))) {
+			return true;
+		} else if (direction == Direction.RIGHT
+				&& (getQuadrant(enemy.getX(), enemy.getY()).equals(getQuadrant(x+64, y)))) {
+			return true;
+		} else if (getQuadrant(enemy.getX(), enemy.getY()).equals(getQuadrant(x, y))) {
+			return true;
+		}
+
+		return false;
+	}
 
 	public boolean interception() {
 

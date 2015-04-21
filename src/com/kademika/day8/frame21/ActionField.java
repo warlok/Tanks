@@ -113,17 +113,12 @@ public class ActionField {
         int step = 1;
         int covered = 0;
         Direction direction = tank.getDirection();
-        String tankKoordinate = getQuadrant(tank.getX(), tank.getY());
-        int delim = tankKoordinate.indexOf("_");
-        int elemTankY = Integer.parseInt(tankKoordinate.substring(0, delim));
-        int elemTankX = Integer.parseInt(tankKoordinate.substring(delim + 1));
-//		bf.updateQuadrant(elemTankY, elemTankX, tank);
 
         // check limits x: 0, 513; y: 0, 513
         if ((tank.getDirection() == Direction.UP && tank.getY() == 0)
-                || (tank.getDirection() == Direction.DOWN && tank.getY() >= bf.getBF_HEIGHT())
+                || (tank.getDirection() == Direction.DOWN && tank.getY() >= bf.getBF_HEIGHT()-64)
                 || (tank.getDirection() == Direction.LEFT && tank.getX() == 0)
-                || (tank.getDirection() == Direction.RIGHT && tank.getX() >= bf.getBF_WIDTH())) {
+                || (tank.getDirection() == Direction.RIGHT && tank.getX() >= bf.getBF_WIDTH()-64)) {
             System.out.println("[illegal move] direction: "
                     + tank.getDirection() + " tankX: " + tank.getX()
                     + ", tankY: " + tank.getY());
@@ -140,11 +135,10 @@ public class ActionField {
         while (covered < 64) {
 
             if (processTanksInterception(tank)) {
-//                processFire(tank, bul);
+//                processFire(tank);
                 System.out.println(tank.getClass() + " Killing Enemy");
                 return;
             }
-            bf.scanQuadrant(elemTankY, elemTankX);
 
             if (tank.getDirection() == Direction.UP) {
 
@@ -282,11 +276,12 @@ public class ActionField {
 
     private boolean processTanksInterception(Tank tank) {
 
-        if (getQuadrant(agressor.getX(), agressor.getY()).equals(getQuadrant(defender.getX(), defender.getY()))) {
-            return true;
-        }
-
-        return false;
+//        if (getQuadrant(agressor.getX(), agressor.getY()).equals(getQuadrant(defender.getX(), defender.getY()))) {
+//            return true;
+//        }
+//
+//        return false;
+        return tank.tanksInterception();
     }
 
     private boolean processTankInterception(Tank tank) {
@@ -310,10 +305,11 @@ public class ActionField {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 36));
-                g.drawString("Game Over", 200, 100);
+                g.setColor(new Color(255, 19, 31));
+                g.fillRect(0,0,1024,1024);
             }
         };
+        panel.setLayout(new GridBagLayout());
         endFrame.setLocation(100, 100);
         endFrame.setMinimumSize(new Dimension(bf.getBF_WIDTH(),
                 bf.getBF_HEIGHT() + 22));
@@ -321,7 +317,15 @@ public class ActionField {
         gameFrame.setVisible(false);
         endFrame.setVisible(true);
         JButton button = new JButton("Try Again");
-        panel.add(button);
+        button.setSize(20,40);
+        JLabel lable = new JLabel();
+        lable.setText("GAME OVER");
+        lable.setSize(100, 100);
+        lable.setFont(new Font(Font.MONOSPACED, Font.BOLD, 50));
+        panel.add(button, new GridBagConstraints(0, 1, 10, 10, 0, 0,
+                GridBagConstraints.LINE_START, 0, new Insets(0, 80, 0, 0), 0, 0));
+        panel.add(lable, new GridBagConstraints(0, 0, 1, 1, 0, 0,
+                GridBagConstraints.LINE_START, 0, new Insets(0, 0, 0, 0), 0, 0));
         endFrame.setContentPane(panel);
         endFrame.pack();
         endFrame.repaint();
@@ -412,13 +416,14 @@ public class ActionField {
                 bf.generateBattleField();
 
                 defender = new T34(bf, (bf.getQuadrantsX() / 2 + 1) * 64, (bf.getQuadrantsY() - 1) * 64, Direction.UP);
-                defender.setEnemy(agressor);
+
                 if (tigerButton.isSelected()) {
                     agressor = new Tiger(bf, randCoordinate.nextInt(bf.getQuadrantsX() - 1) * 64, (randCoordinate.nextInt(bf.getQuadrantsY()/2)) * 64, Direction.DOWN);
                 } else {
                     agressor = new BT7(bf, randCoordinate.nextInt(bf.getQuadrantsX() - 1) * 64, (randCoordinate.nextInt(bf.getQuadrantsY()/2)) * 64, Direction.DOWN);
                 }
                 agressor.setEnemy(defender);
+                defender.setEnemy(agressor);
                 bf.updateQuadrant(agressor.getY() / 64, agressor.getX() / 64, null);
                 bf.updateQuadrant(defender.getY() / 64, defender.getX() / 64, null);
                 gameFrame.setContentPane(mainPanel);
