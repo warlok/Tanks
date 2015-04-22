@@ -3,7 +3,7 @@ package com.kademika.day8.frame21.BattleField.objects.tanks.bullet;
 import java.awt.Graphics;
 
 import com.kademika.day8.frame21.BattleField.objects.tanks.Direction;
-import com.kademika.day8.frame21.BattleField.objects.tanks.Tank;
+import com.kademika.day8.frame21.interfaces.Tank;
 import com.kademika.day8.frame21.interfaces.Destroyable;
 import com.kademika.day8.frame21.interfaces.Drawable;
 import java.awt.image.BufferedImage;

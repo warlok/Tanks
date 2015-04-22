@@ -1,24 +1,14 @@
 package com.kademika.day8.frame21.BattleField.objects.tanks;
 
-import java.awt.*;
-import java.awt.geom.Ellipse2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
-
 import com.kademika.day8.frame21.BattleField.BattleField;
 import com.kademika.day8.frame21.BattleField.objects.Water;
-import com.kademika.day8.frame21.BattleField.objects.tanks.bullet.Bullet;
 import com.kademika.day8.frame21.interfaces.Destroyable;
 import com.kademika.day8.frame21.interfaces.Drawable;
+import com.kademika.day8.frame21.interfaces.Tank;
 
 
 public abstract class AbstractTank implements Destroyable, Drawable, Tank {
 
-	private Shape shape;
-	private Dimension dimention;
 	protected int speed = 10;
 	protected int x;
 	protected int y;
@@ -33,8 +23,6 @@ public abstract class AbstractTank implements Destroyable, Drawable, Tank {
 
     public AbstractTank(BattleField bf) {
 		this.bf = bf;
-		dimention = new Dimension(64, 64);
-		shape = new Rectangle(new Point(x, y), dimention);
 	}
 
 	public AbstractTank(BattleField bf, int x, int y, Direction direction) {
@@ -76,14 +64,14 @@ public abstract class AbstractTank implements Destroyable, Drawable, Tank {
 		this.y += y;
 	}
 
-	public void turn(Direction direction) throws Exception {
+	public void turn(Direction direction) {
 		if (!this.direction.equals(direction)) {
 			this.direction = direction;
 		}
 	}
 
 
-	public void destroy() /* throws Exception */{
+	public void destroy() {
 		x = -100;
 		y = -100;
         destroed = true;
@@ -93,11 +81,7 @@ public abstract class AbstractTank implements Destroyable, Drawable, Tank {
         return destroed;
     }
 
-	public Shape getShape() {
-		return shape;
-	}
-
-	public Action setupTank() throws Exception {
+	public Action setupTank() {
 		 return Action.MOVE;
 		 }
 

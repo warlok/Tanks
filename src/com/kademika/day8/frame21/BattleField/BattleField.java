@@ -2,14 +2,8 @@ package com.kademika.day8.frame21.BattleField;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.Random;
 
-import javax.imageio.ImageIO;
-
-import com.kademika.day8.frame21.*;
 import com.kademika.day8.frame21.BattleField.objects.AbstractObjects;
 import com.kademika.day8.frame21.BattleField.objects.Brick;
 import com.kademika.day8.frame21.BattleField.objects.Eagle;
@@ -116,10 +110,6 @@ public class BattleField implements Drawable {
 	String getQuadrantXY(int v, int h) {
 		return (v - 1) * 64 + "_" + (h - 1) * 64;
 	}
-
-//	public BattleField(Object[][] battleField) {
-//		this.battleField = battleField;
-//	}
 
 	public Object scanQuadrant(int x, int y) {
 		if (x >= 0 && x < quadrantsY && y >= 0 && y < quadrantsX) {

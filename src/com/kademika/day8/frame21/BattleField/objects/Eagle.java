@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+
 import com.kademika.day8.frame21.interfaces.Destroyable;
 
 public class Eagle extends AbstractObjects implements Destroyable {

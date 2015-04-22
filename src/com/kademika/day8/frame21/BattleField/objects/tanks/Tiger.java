@@ -1,10 +1,6 @@
 package com.kademika.day8.frame21.BattleField.objects.tanks;
 
 import com.kademika.day8.frame21.BattleField.BattleField;
-import com.kademika.day8.frame21.BattleField.objects.tanks.Direction;
-import com.kademika.day8.frame21.interfaces.Destroyable;
-import com.kademika.day8.frame21.interfaces.Drawable;
-
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -78,7 +74,7 @@ public class Tiger extends AbstractTank {
     }
 
     @Override
-    public Action setupTank() throws Exception {
+    public Action setupTank() {
         Action result = Action.NOTHING;
         int enemyY = getQuadrant(enemy.getY());
         int enemyX = getQuadrant(enemy.getX());

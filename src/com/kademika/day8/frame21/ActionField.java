@@ -2,16 +2,9 @@ package com.kademika.day8.frame21;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.Observable;
 import java.util.Random;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
-import javax.swing.tree.ExpandVetoException;
 
 import com.kademika.day8.frame21.BattleField.BattleField;
 import com.kademika.day8.frame21.BattleField.objects.AbstractObjects;
@@ -22,10 +15,9 @@ import com.kademika.day8.frame21.BattleField.objects.tanks.BT7;
 import com.kademika.day8.frame21.BattleField.objects.tanks.AbstractTank;
 import com.kademika.day8.frame21.BattleField.objects.tanks.Direction;
 import com.kademika.day8.frame21.BattleField.objects.tanks.T34;
-import com.kademika.day8.frame21.BattleField.objects.tanks.Tank;
+import com.kademika.day8.frame21.interfaces.Tank;
 import com.kademika.day8.frame21.BattleField.objects.tanks.Tiger;
 import com.kademika.day8.frame21.BattleField.objects.tanks.bullet.Bullet;
-import sun.rmi.runtime.NewThreadAction;
 
 public class ActionField {
 
@@ -60,21 +52,15 @@ public class ActionField {
     public void runTheGame() {
         // processAction(defender, bul, defender.setupTank());
         while (!agressor.isDestroed() && !defender.isDestroed() && bf.scanQuadrant(bf.getQuadrantsY() - 1, findEagle()) != null) {
-            try {
-                processAction(agressor, bul, agressor.setupTank());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+
+            processAction(agressor, bul, agressor.setupTank());
             try {
                 Thread.sleep(50);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            try {
-                processAction(defender, bul, defender.setupTank());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+
+            processAction(defender, bul, defender.setupTank());
             try {
                 Thread.sleep(50);
             } catch (InterruptedException e) {
@@ -85,7 +71,7 @@ public class ActionField {
         System.out.println("Game Over");
     }
 
-    public void processAction(Tank tank, Bullet b, Action a) throws Exception {
+    public void processAction(Tank tank, Bullet b, Action a)  {
         switch (a) {
             case MOVE:
                 processMove(tank);
@@ -109,7 +95,7 @@ public class ActionField {
         return -1;
     }
 
-    public void processMove(Tank tank) throws Exception {
+    public void processMove(Tank tank)  {
         int step = 1;
         int covered = 0;
         Direction direction = tank.getDirection();
@@ -126,16 +112,15 @@ public class ActionField {
         }
 
         tank.turn(direction);
-        if (processTankInterception(tank)) {
-//            processFire(tank, bul);
+
+        if (processInterceptionTank(tank)) {
             System.out.println(tank.getClass() + " Illegal move");
             return;
         }
 
         while (covered < 64) {
 
-            if (processTanksInterception(tank)) {
-//                processFire(tank);
+            if (processInterceptionBetweenTanks(tank)) {
                 System.out.println(tank.getClass() + " Killing Enemy");
                 return;
             }
@@ -169,17 +154,21 @@ public class ActionField {
             covered += step;
             mainPanel.repaint();
 
-            Thread.sleep(tank.getSpeed());
+            try {
+                Thread.sleep(tank.getSpeed());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
     }
 
-    public void processTurn(Tank tank) throws Exception {
+    public void processTurn(Tank tank) {
         mainPanel.repaint();
 
     }
 
-    public void processFire(Tank tank) throws Exception {
+    public void processFire(Tank tank) {
 
         bul.destroy();
         bul.setTank(tank);
@@ -221,20 +210,24 @@ public class ActionField {
                             + bul.getBulletX());
                 }
                 step++;
-                if (processInterception() || bul.getBulletX() < 0
+                if (processInterceptionBullet() || bul.getBulletX() < 0
                         && bul.getBulletY() < 0 || bul.getBulletX() > bf.getBF_WIDTH()
                         || bul.getBulletY() > bf.getBF_HEIGHT()) {
                     bul.destroy();
                 }
                 mainPanel.repaint();
 
-                Thread.sleep(bul.getSpeed());
+                try {
+                    Thread.sleep(bul.getSpeed());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
     }
 
-    private boolean processInterception() /* throws Exception */ {
+    private boolean processInterceptionBullet() {
 
         String koordinate = getQuadrant(bul.getBulletX(), bul.getBulletY());
         int delim = koordinate.indexOf("_");
@@ -264,7 +257,6 @@ public class ActionField {
                     bf.updateQuadrant(elemY, elemX, null);
                     mainPanel.repaint();
 
-
                     return true;
                 }
 
@@ -274,17 +266,13 @@ public class ActionField {
         return false;
     }
 
-    private boolean processTanksInterception(Tank tank) {
+    private boolean processInterceptionBetweenTanks(Tank tank) {
 
-//        if (getQuadrant(agressor.getX(), agressor.getY()).equals(getQuadrant(defender.getX(), defender.getY()))) {
-//            return true;
-//        }
-//
-//        return false;
         return tank.tanksInterception();
+
     }
 
-    private boolean processTankInterception(Tank tank) {
+    private boolean processInterceptionTank(Tank tank) {
 
         return tank.interception();
     }
@@ -345,7 +333,7 @@ public class ActionField {
     }
 
 
-    public ActionField() throws Exception {
+    public ActionField() {
         drawGUI();
     }
 
@@ -362,7 +350,9 @@ public class ActionField {
         JPanel radioPanel = new JPanel(new GridLayout(0, 1));
         JPanel dimentionPanel = new JPanel();
 
-        initVars();
+        bf = new BattleField();
+        bf.generateBattleField();
+        bul = new Bullet(-100, -100, Direction.LEFT);
 
         JLabel labelX = new JLabel("X Dimention: ");
         JLabel labelY = new JLabel("Y Dimention: ");
@@ -418,9 +408,11 @@ public class ActionField {
                 defender = new T34(bf, (bf.getQuadrantsX() / 2 + 1) * 64, (bf.getQuadrantsY() - 1) * 64, Direction.UP);
 
                 if (tigerButton.isSelected()) {
-                    agressor = new Tiger(bf, randCoordinate.nextInt(bf.getQuadrantsX() - 1) * 64, (randCoordinate.nextInt(bf.getQuadrantsY()/2)) * 64, Direction.DOWN);
+                    agressor = new Tiger(bf, randCoordinate.nextInt(bf.getQuadrantsX() - 1) * 64,
+                            (randCoordinate.nextInt(bf.getQuadrantsY()/2)) * 64, Direction.DOWN);
                 } else {
-                    agressor = new BT7(bf, randCoordinate.nextInt(bf.getQuadrantsX() - 1) * 64, (randCoordinate.nextInt(bf.getQuadrantsY()/2)) * 64, Direction.DOWN);
+                    agressor = new BT7(bf, randCoordinate.nextInt(bf.getQuadrantsX() - 1) * 64,
+                            (randCoordinate.nextInt(bf.getQuadrantsY()/2)) * 64, Direction.DOWN);
                 }
                 agressor.setEnemy(defender);
                 defender.setEnemy(agressor);
@@ -447,12 +439,6 @@ public class ActionField {
             }
 
         });
-    }
-
-    public void initVars() {
-        bf = new BattleField();
-        bf.generateBattleField();
-        bul = new Bullet(-100, -100, Direction.LEFT);
     }
 
 }

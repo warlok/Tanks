@@ -60,7 +60,7 @@ public class BT7 extends AbstractTank {
     }
 
     @Override
-    public Action setupTank() throws Exception {
+    public Action setupTank() {
 
         if (x < bf.getQuadrantsX()/2 * 64) {
             while (x != bf.getQuadrantsX()/2 * 64) {

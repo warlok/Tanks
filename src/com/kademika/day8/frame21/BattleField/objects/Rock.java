@@ -2,7 +2,6 @@ package com.kademika.day8.frame21.BattleField.objects;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;

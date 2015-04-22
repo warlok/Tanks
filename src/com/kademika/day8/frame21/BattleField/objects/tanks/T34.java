@@ -1,20 +1,11 @@
 package com.kademika.day8.frame21.BattleField.objects.tanks;
 
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import com.kademika.day8.frame21.BattleField.objects.tanks.Direction;
-import com.kademika.day8.frame21.interfaces.Destroyable;
-import com.kademika.day8.frame21.interfaces.Drawable;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.Random;
-
 import com.kademika.day8.frame21.BattleField.BattleField;
 
 public class T34 extends AbstractTank {
@@ -63,7 +54,6 @@ public class T34 extends AbstractTank {
 		}
 	}
 
-
     @Override
 	public void draw(Graphics g) {
 		BufferedImage img = null;
@@ -80,7 +70,7 @@ public class T34 extends AbstractTank {
 	}
 
 	@Override
-	public Action setupTank() throws Exception {
+	public Action setupTank() {
 		Action result = Action.NOTHING;
 
 		int enemyY = getQuadrant(enemy.getY());
