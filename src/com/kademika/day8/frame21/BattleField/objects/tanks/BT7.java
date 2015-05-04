@@ -65,8 +65,7 @@ public class BT7 extends AbstractTank {
         if (x < bf.getQuadrantsX()/2 * 64) {
             while (x != bf.getQuadrantsX()/2 * 64) {
                 if (direction != Direction.RIGHT) {
-                    turn(Direction.RIGHT);
-                    return Action.TURN;
+                    return Action.TURN_RIGHT;
                 }
                 if (interception() || tanksInterception()) {
                     return Action.FIRE;
@@ -77,8 +76,7 @@ public class BT7 extends AbstractTank {
         } else {
             while (x != bf.getQuadrantsX()/2 * 64) {
                 if (direction != Direction.LEFT) {
-                    turn(Direction.LEFT);
-                    return Action.TURN;
+                    return Action.TURN_LEFT;
                 }
                 if (interception() || tanksInterception()) {
                     return Action.FIRE;
@@ -91,8 +89,7 @@ public class BT7 extends AbstractTank {
         if (y < (bf.getQuadrantsY()-1) * 64) {
             while (y != bf.getQuadrantsY() * 64) {
                 if (direction != Direction.DOWN) {
-                    turn(Direction.DOWN);
-                    return Action.TURN;
+                    return Action.TURN_DOWN;
                 }
                 if (interception() || tanksInterception()) {
                     return Action.FIRE;
@@ -103,8 +100,7 @@ public class BT7 extends AbstractTank {
         } else {
             while (y != bf.getQuadrantsY() * 64) {
                 if (direction != Direction.UP) {
-                    turn(Direction.UP);
-                    return Action.TURN;
+                    return Action.TURN_UP;
                 }
                 if (interception() || tanksInterception()) {
                     return Action.FIRE;

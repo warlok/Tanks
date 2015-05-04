@@ -85,26 +85,22 @@ public class Tiger extends AbstractTank {
         if (tankX == enemyX) {
             if (tankY < enemyY) {
                 if (direction != Direction.DOWN) {
-                    turn(Direction.DOWN);
-                    return Action.TURN;
+                    return Action.TURN_DOWN;
                 }
             } else {
                 if (direction != Direction.UP) {
-                    turn(Direction.UP);
-                    return Action.TURN;
+                    return Action.TURN_UP;
                 }
             }
             result = Action.FIRE;
         } else if (tankY == enemyY) {
             if (tankX < enemyX) {
                 if (direction != Direction.RIGHT) {
-                    turn(Direction.RIGHT);
-                    return Action.TURN;
+                    return Action.TURN_RIGHT;
                 }
             } else {
-                if (direction != Direction.LEFT) {
-                    turn(Direction.LEFT);
-                    return Action.TURN;
+                if (direction != Direction.LEFT) {;
+                    return Action.TURN_LEFT;
                 }
             }
             result = Action.FIRE;
@@ -112,26 +108,22 @@ public class Tiger extends AbstractTank {
             result = Action.FIRE;
         } else if (checkMinWay(enemyY, enemyX, tankX, tankY) && tankX < enemyX) {
             if (direction != Direction.RIGHT) {
-                turn(Direction.RIGHT);
-                return Action.TURN;
+                return Action.TURN_RIGHT;
             }
             result = Action.MOVE;
         } else if (checkMinWay(enemyY, enemyX, tankX, tankY) && tankX > enemyX) {
             if (direction != Direction.LEFT) {
-                turn(Direction.LEFT);
-                return Action.TURN;
+                return Action.TURN_LEFT;
             }
             result = Action.MOVE;
         } else if ( tankY > enemyY) {
             if (direction != Direction.LEFT) {
-                turn(Direction.DOWN);
-                return Action.TURN;
+                return Action.TURN_DOWN;
             }
             result = Action.MOVE;
         } else if (tankY < enemyY) {
             if (direction != Direction.UP) {
-                turn(Direction.UP);
-                return Action.TURN;
+                return Action.TURN_UP;
             }
             result = Action.MOVE;
         }

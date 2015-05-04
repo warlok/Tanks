@@ -20,9 +20,25 @@ public class BattleField implements Drawable {
     private int BF_WIDTH = quadrantsX*size;
 	private int BF_HEIGHT = quadrantsY*size;
 
-    private String[][] battleFieldString = new String[quadrantsY][quadrantsX];
-    private Object[][] battleField = new Object[quadrantsY][quadrantsX];
+	public String[][] getBattleFieldString() {
+		return battleFieldString;
+	}
 
+	public void setBattleFieldString(String[][] battleFieldString) {
+		this.battleFieldString = battleFieldString;
+	}
+
+	private String[][] battleFieldString = new String[quadrantsY][quadrantsX];
+
+	private Object[][] battleField = new Object[quadrantsY][quadrantsX];
+
+	public void setBattleField(Object[][] battleField) {
+		this.battleField = battleField;
+	}
+
+	public Object[][] getBattleField() {
+		return battleField;
+	}
 	/*private String[][] battleFieldString = new String[][] {
 			{ "B", "B", "B", "B", "B", "B", "B", "B", "B" },
 			{ "B", "", "", "W", "W", "", "B", "", "B" },

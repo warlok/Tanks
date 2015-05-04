@@ -82,8 +82,7 @@ public class T34 extends AbstractTank {
 		// Avoid the Eagle
 		if (tankY == bf.getQuadrantsY()) {
 			if (direction != Direction.UP) {
-				turn(Direction.UP);
-				return Action.TURN;
+				return Action.TURN_UP;
 			} else if (interception() || tanksInterception()) {
 				return Action.FIRE;
 
@@ -96,26 +95,22 @@ public class T34 extends AbstractTank {
 			if (tankX == enemyX) {
 				if (tankY < enemyY) {
 					if (direction != Direction.DOWN) {
-						turn(Direction.DOWN);
-						return Action.TURN;
+						return Action.TURN_DOWN;
 					}
 				} else {
 					if (direction != Direction.UP) {
-						turn(Direction.UP);
-						return Action.TURN;
+						return Action.TURN_UP;
 					}
 				}
 				result = Action.FIRE;
 			} else if (tankY == enemyY) {
 				if (tankX < enemyX) {
 					if (direction != Direction.RIGHT) {
-						turn(Direction.RIGHT);
-						return Action.TURN;
+						return Action.TURN_RIGHT;
 					}
 				} else {
 					if (direction != Direction.LEFT) {
-						turn(Direction.LEFT);
-						return Action.TURN;
+						return Action.TURN_LEFT;
 					}
 				}
 				result = Action.FIRE;
@@ -123,34 +118,29 @@ public class T34 extends AbstractTank {
 				result = Action.FIRE;
 			} else if (checkMinWay(enemyY, enemyX, tankX, tankY) && tankX < enemyX) {
 				if (direction != Direction.RIGHT) {
-					turn(Direction.RIGHT);
-					return Action.TURN;
+					return Action.TURN_RIGHT;
 				}
 				result = Action.MOVE;
 			} else if (checkMinWay(enemyY, enemyX, tankX, tankY) && tankX > enemyX) {
 				if (direction != Direction.LEFT) {
-					turn(Direction.LEFT);
-					return Action.TURN;
+					return Action.TURN_LEFT;
 				}
 				result = Action.MOVE;
 			} else if (tankY > enemyY) {
 				if (direction != Direction.LEFT) {
-					turn(Direction.DOWN);
-					return Action.TURN;
+					return Action.TURN_DOWN;
 				}
 				result = Action.MOVE;
 			} else if (tankY < enemyY) {
 				if (direction != Direction.UP) {
-					turn(Direction.UP);
-					return Action.TURN;
+					return Action.TURN_UP;
 				}
 				result = Action.MOVE;
 			}
 		} else {
 			if (tankX != bf.getQuadrantsX()/2+1) {
 				if (direction != Direction.LEFT) {
-					turn(Direction.LEFT);
-					return Action.TURN;
+					return Action.TURN_LEFT;
 				} else if (interception() || tanksInterception()) {
 					return Action.FIRE;
 
@@ -164,16 +154,13 @@ public class T34 extends AbstractTank {
 				result = Action.FIRE;
 			} else if (direction == Direction.RIGHT && counter > 0) {
 				counter = 0;
-				turn(Direction.UP);
-				result = Action.TURN;
+				result = Action.TURN_UP;
 			} else if (direction == Direction.UP && counter > 0) {
 				counter = 0;
-				turn(Direction.LEFT);
-				result = Action.TURN;
+				result = Action.TURN_LEFT;
 			} else if (direction == Direction.LEFT && counter > 0) {
 				counter = 0;
-				turn(Direction.RIGHT);
-				result = Action.TURN;
+				result = Action.TURN_RIGHT;
 			}
 
 		}
