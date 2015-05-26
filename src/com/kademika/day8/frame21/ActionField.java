@@ -4,9 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.Random;
-
 import javax.swing.*;
-
 import com.kademika.day8.frame21.BattleField.BattleField;
 import com.kademika.day8.frame21.BattleField.objects.AbstractObjects;
 import com.kademika.day8.frame21.BattleField.objects.Eagle;
@@ -30,9 +28,7 @@ public class ActionField {
     private JButton go;
     private JRadioButton bt7Button;
     private JRadioButton tigerButton;
-    private JFrame startFrame = new JFrame("BATTLE FIELD, DAY 8");
     private JFrame gameFrame = new JFrame("BATTLE FIELD, DAY 8");
-    private JFrame endFrame = new JFrame("BATTLE FIELD, DAY 8");
     private JPanel mainPanel = new JPanel() {
         @Override
         protected void paintComponent(Graphics g) {
@@ -43,6 +39,7 @@ public class ActionField {
             bul.draw(g);
         }
     };
+    JPanel startPanel;
     private com.kademika.day8.frame21.BattleField.BattleField bf;
     private T34 defender;
     private Bullet bul;
@@ -179,45 +176,30 @@ public class ActionField {
         tank.turn(direction);
 
         if (processInterceptionTank(tank)) {
-//            System.out.println(tank.getClass() + " Illegal move");
             return;
         }
 
         while (covered < 64) {
 
             if (processInterceptionBetweenTanks(tank)) {
-//                System.out.println(tank.getClass() + " Killing Enemy");
                 return;
             }
 
             if (tank.getDirection() == Direction.UP) {
 
                 tank.updateY(-step);
-//                System.out.println("[move up] direction: "
-//                        + tank.getDirection() + " tankX: " + tank.getX()
-//                        + ", tankY: " + tank.getY());
             } else if (tank.getDirection() == Direction.DOWN) {
 
                 tank.updateY(step);
-//                System.out.println("[move down] direction: "
-//                        + tank.getDirection() + " tankX: " + tank.getX()
-//                        + ", tankY: " + tank.getY());
             } else if (tank.getDirection() == Direction.LEFT) {
 
                 tank.updateX(-step);
-//                System.out.println("[move left] direction: "
-//                        + tank.getDirection() + " tankX: " + tank.getX()
-//                        + ", tankY: " + tank.getY());
             } else {
 
                 tank.updateX(step);
-//                System.out.println("[move right] direction: "
-//                        + tank.getDirection() + " tankX: " + tank.getX()
-//                        + ", tankY: " + tank.getY());
             }
 
             covered += step;
-            mainPanel.repaint();
 
             try {
                 Thread.sleep(tank.getSpeed());
@@ -230,7 +212,6 @@ public class ActionField {
 
     public void processTurn(Tank tank, Direction direction) {
         tank.turn(direction);
-        mainPanel.repaint();
     }
 
     public void processFire(Tank tank) {
@@ -240,55 +221,45 @@ public class ActionField {
         bul.updateX(tank.getX() + 125);
         bul.updateY(tank.getY() + 125);
         bul.setDirection(tank.getDirection());
-        int step2 = 1;
+        final int step2 = 1;
 
-        while (bul.getBulletX() > 0 && bul.getBulletY() > 0
-                && bul.getBulletX() < bf.getBF_WIDTH() && bul.getBulletY() < bf.getBF_HEIGHT()) {
+        new Thread() {
+            @Override
+            public void run() {
+                while (bul.getBulletX() > 0 && bul.getBulletY() > 0
+                        && bul.getBulletX() < bf.getBF_WIDTH() && bul.getBulletY() < bf.getBF_HEIGHT()) {
 
-            int step = 0;
+                    int step = 0;
 
-            while (step < 64) {
+                    while (step < 64) {
 
-                if (tank.getDirection().equals(Direction.UP)) {
-                    bul.updateY(-step2);
-//                    System.out.println("[fire up] direction: "
-//                            + tank.getDirection() + " bulletY: "
-//                            + bul.getBulletY() + ", bulletX: "
-//                            + bul.getBulletX());
-                } else if (tank.getDirection().equals(Direction.DOWN)) {
-                    bul.updateY(step2);
-//                    System.out.println("[fire down] direction: "
-//                            + tank.getDirection() + " bulletY: "
-//                            + bul.getBulletY() + ", bulletX: "
-//                            + bul.getBulletX());
-                } else if (tank.getDirection().equals(Direction.LEFT)) {
-                    bul.updateX(-step2);
-//                    System.out.println("[fire left] direction: "
-//                            + tank.getDirection() + " bulletY: "
-//                            + bul.getBulletY() + ", bulletX: "
-//                            + bul.getBulletX());
-                } else {
-                    bul.updateX(step2);
-//                    System.out.println("[fire right] direction: "
-//                            + tank.getDirection() + " bulletY: "
-//                            + bul.getBulletY() + ", bulletX: "
-//                            + bul.getBulletX());
-                }
-                step++;
-                if (processInterceptionBullet() || bul.getBulletX() < 0
-                        && bul.getBulletY() < 0 || bul.getBulletX() > bf.getBF_WIDTH()
-                        || bul.getBulletY() > bf.getBF_HEIGHT()) {
-                    bul.destroy();
-                }
-                mainPanel.repaint();
+                        if (bul.getDirection().equals(Direction.UP)) {
+                            bul.updateY(-step2);
+                        } else if (bul.getDirection().equals(Direction.DOWN)) {
+                            bul.updateY(step2);
+                        } else if (bul.getDirection().equals(Direction.LEFT)) {
+                            bul.updateX(-step2);
+                        } else {
+                            bul.updateX(step2);
+                        }
+                        step++;
+                        if (processInterceptionBullet() || bul.getBulletX() < 0
+                                && bul.getBulletY() < 0 || bul.getBulletX() > bf.getBF_WIDTH()
+                                || bul.getBulletY() > bf.getBF_HEIGHT()) {
+                            bul.destroy();
+                        }
 
-                try {
-                    Thread.sleep(bul.getSpeed());
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                        try {
+                            Thread.sleep(bul.getSpeed());
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }
-        }
+        }.start();
+
+
 
     }
 
@@ -305,12 +276,10 @@ public class ActionField {
                     && !(agressor.equals(bul.getTank()))) {
                 agressor.destroy();
 
-                mainPanel.repaint();
                 return true;
             } else if (getQuadrant(bul.getBulletX(), bul.getBulletY()).equals(getQuadrant(defender.getX(), defender.getY()))
                     && !(defender.equals(bul.getTank()))) {
                 defender.destroy();
-                mainPanel.repaint();
 
                 return true;
             } else if (bf.scanQuadrant(elemY, elemX) != null && !(bf.scanQuadrant(elemY, elemX) instanceof Water)) {
@@ -320,7 +289,6 @@ public class ActionField {
                             elemY, elemX);
                     o.destroy();
                     bf.updateQuadrant(elemY, elemX, null);
-                    mainPanel.repaint();
 
                     return true;
                 }
@@ -363,12 +331,7 @@ public class ActionField {
             }
         };
         panel.setLayout(new GridBagLayout());
-        endFrame.setLocation(100, 100);
-        endFrame.setMinimumSize(new Dimension(bf.getBF_WIDTH(),
-                bf.getBF_HEIGHT() + 22));
-        endFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        gameFrame.setVisible(false);
-        endFrame.setVisible(true);
+
         JButton button = new JButton("Try Again");
         button.setSize(20, 40);
         JLabel lable = new JLabel();
@@ -385,13 +348,14 @@ public class ActionField {
                 GridBagConstraints.LINE_START, 0, new Insets(0, 80, 50, 0), 0, 0));
         panel.add(lable, new GridBagConstraints(0, 0, 1, 1, 0, 0,
                 GridBagConstraints.LINE_START, 0, new Insets(0, 0, 0, 0), 0, 0));
-        endFrame.setContentPane(panel);
-        endFrame.pack();
-        endFrame.repaint();
+        gameFrame.setContentPane(panel);
+        gameFrame.pack();
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                restartGame();
+                gameFrame.setContentPane(startPanel);
+                gameFrame.pack();
+                gameFrame.pack();
             }
         });
 
@@ -410,10 +374,8 @@ public class ActionField {
                 defender.setEnemy(agressor);
                 bf.updateQuadrant(agressor.getY() / 64, agressor.getX() / 64, null);
                 bf.updateQuadrant(defender.getY() / 64, defender.getX() / 64, null);
-                endFrame.setVisible(false);
-                gameFrame.setVisible(true);
+                gameFrame.setContentPane(mainPanel);
                 gameFrame.pack();
-                gameFrame.repaint();
                 new Thread() {
                     @Override
                     public void run() {
@@ -424,15 +386,23 @@ public class ActionField {
         });
     }
 
-    public void restartGame() {
-        endFrame.setVisible(false);
-        startFrame.setVisible(true);
-        startFrame.pack();
-        startFrame.repaint();
-    }
-
 
     public ActionField() {
+
+        new Thread() {
+            @Override
+            public void run() {
+                while (true) {
+                    gameFrame.repaint();
+                    try {
+                        sleep(16);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }.start();
+
         drawGUI();
     }
 
@@ -445,7 +415,7 @@ public class ActionField {
         picture = new JLabel();
         picture.setIcon(icon1);
 
-        JPanel panel = new JPanel(new BorderLayout());
+        startPanel = new JPanel(new BorderLayout());
         JPanel radioPanel = new JPanel(new GridLayout(0, 1));
         JPanel dimentionPanel = new JPanel();
 
@@ -465,19 +435,19 @@ public class ActionField {
         radioPanel.add(bt7Button);
         radioPanel.add(tigerButton);
 
-        panel.add(dimentionPanel, BorderLayout.BEFORE_FIRST_LINE);
-        panel.add(radioPanel, BorderLayout.LINE_START);
-        panel.add(picture, BorderLayout.CENTER);
-        panel.add(go, BorderLayout.AFTER_LAST_LINE);
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        startPanel.add(dimentionPanel, BorderLayout.BEFORE_FIRST_LINE);
+        startPanel.add(radioPanel, BorderLayout.LINE_START);
+        startPanel.add(picture, BorderLayout.CENTER);
+        startPanel.add(go, BorderLayout.AFTER_LAST_LINE);
+        startPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        startFrame.setContentPane(panel);
-        startFrame.setLocation(100, 100);
-        startFrame.setMinimumSize(new Dimension(bf.getBF_WIDTH(),
+        gameFrame.setContentPane(startPanel);
+        gameFrame.setLocation(1200, 100);
+        gameFrame.setMinimumSize(new Dimension(bf.getBF_WIDTH(),
                 bf.getBF_HEIGHT() + 22));
-        startFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        startFrame.pack();
-        startFrame.setVisible(true);
+        gameFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        gameFrame.pack();
+        gameFrame.setVisible(true);
 
         bt7Button.addActionListener(new ActionListener() {
             @Override
@@ -527,15 +497,10 @@ public class ActionField {
                 savedBattlefield.setQuadrantsXY(Integer.valueOf(dimentionX.getText()), Integer.valueOf(dimentionY.getText()));
                 savedBattlefield.setBattleFieldString(bf.getBattleFieldString());
                 gameFrame.setContentPane(mainPanel);
-                gameFrame.setLocation(100, 100);
                 gameFrame.setMinimumSize(new Dimension(bf.getBF_WIDTH(),
                         bf.getBF_HEIGHT() + 22));
-                gameFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
                 gameFrame.pack();
-                startFrame.setVisible(false);
-                gameFrame.repaint();
                 gameFrame.setVisible(true);
-                gameFrame.revalidate();
                 new Thread() {
                     @Override
                     public void run() {
