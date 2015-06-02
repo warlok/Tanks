@@ -49,6 +49,14 @@ public class ActionField {
     private BattleField savedBattlefield;
     private AbstractTank savedAgressor;
     private T34 savedDefender;
+    private KeyListener keyboardListener = new KeyAdapter() {
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+            defender.setKey(KeyEvent.getKeyText(e.getKeyCode()));
+            System.out.println("keyPressed=" + KeyEvent.getKeyText(e.getKeyCode()));
+        }
+    };
 
     public void replayGame() {
         try (
@@ -109,11 +117,11 @@ public class ActionField {
 
                 processAction(defender, defenderAction);
                 bw.write(defenderAction.toString() + "\n");
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    Thread.sleep(50);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
         }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -129,8 +137,24 @@ public class ActionField {
             case MOVE:
                 processMove(tank);
                 break;
+            case MOVE_UP:
+            processTurn(tank, Direction.UP);
+            break;
+            case MOVE_DOWN:
+                processTurn(tank, Direction.DOWN);
+                processMove(tank);
+                break;
+            case MOVE_LEFT:
+                processTurn(tank,Direction.LEFT);
+                processMove(tank);
+                break;
+            case MOVE_RIGHT:
+                processTurn(tank,Direction.RIGHT);
+                processMove(tank);
+                break;
             case TURN_UP:
                 processTurn(tank, Direction.UP);
+                processMove(tank);
                 break;
             case TURN_DOWN:
                 processTurn(tank, Direction.DOWN);
@@ -376,6 +400,7 @@ public class ActionField {
                 bf.updateQuadrant(defender.getY() / 64, defender.getX() / 64, null);
                 gameFrame.setContentPane(mainPanel);
                 gameFrame.pack();
+                mainPanel.requestFocus();
                 new Thread() {
                     @Override
                     public void run() {
@@ -494,13 +519,17 @@ public class ActionField {
                 }
                 savedDefender = new T34(bf, defender.getX(),defender.getY(), defender.getDirection());
                 savedBattlefield = new BattleField();
-                savedBattlefield.setQuadrantsXY(Integer.valueOf(dimentionX.getText()), Integer.valueOf(dimentionY.getText()));
+                savedBattlefield.setQuadrantsXY(Integer.valueOf(dimentionX.getText()),
+                        Integer.valueOf(dimentionY.getText()));
                 savedBattlefield.setBattleFieldString(bf.getBattleFieldString());
+                mainPanel.setFocusable(true);
+                mainPanel.addKeyListener(keyboardListener);
                 gameFrame.setContentPane(mainPanel);
                 gameFrame.setMinimumSize(new Dimension(bf.getBF_WIDTH(),
                         bf.getBF_HEIGHT() + 22));
                 gameFrame.pack();
                 gameFrame.setVisible(true);
+                mainPanel.requestFocus();
                 new Thread() {
                     @Override
                     public void run() {
