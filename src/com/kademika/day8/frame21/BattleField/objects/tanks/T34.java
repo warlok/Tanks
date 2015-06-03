@@ -1,10 +1,13 @@
 package com.kademika.day8.frame21.BattleField.objects.tanks;
 
 import java.awt.Graphics;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Stack;
 
 import javax.imageio.ImageIO;
 import com.kademika.day8.frame21.BattleField.BattleField;
@@ -15,9 +18,13 @@ public class T34 extends AbstractTank {
 	BufferedImage img_right = null;
 	BufferedImage img_up = null;
 	BufferedImage img_down = null;
-    Action action = Action.NOTHING;
-	int counter;
-	
+
+	private String key = "";
+
+	public void setKey(String key) {
+		this.key = key;
+	}
+
 	public T34(BattleField bf) {
 		super(bf);
 		loadImage();
@@ -28,16 +35,8 @@ public class T34 extends AbstractTank {
 		super(bf,x,y,direction);
 		loadImage();
 	}
-
-    public Action getAction() {
-        return action;
-    }
-
-    public void setAction(Action action) {
-        this.action = action;
-    }
-
-    protected void loadImage() {
+	
+	protected void loadImage() {
 		try {
 			img_left = ImageIO.read(new File("T34_left.png"));
 
@@ -81,7 +80,24 @@ public class T34 extends AbstractTank {
 
 	@Override
 	public Action setupTank() {
-		return action;
+
+			if (key == "Up") {
+				return Action.MOVE_UP;
+			}
+			if (key == "Down") {
+				return Action.MOVE_DOWN;
+			}
+			if (key == "Right") {
+				return Action.MOVE_RIGHT;
+			}
+			if (key == "Left") {
+				return Action.MOVE_LEFT;
+			}
+			if (key == "Space") {
+				return Action.FIRE;
+			}
+
+		return Action.NOTHING;
 	}
 
 	public boolean checkMinWay(int enemyY, int enemyX, int tankX, int tankY) {

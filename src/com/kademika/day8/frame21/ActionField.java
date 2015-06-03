@@ -9,9 +9,13 @@ import com.kademika.day8.frame21.BattleField.BattleField;
 import com.kademika.day8.frame21.BattleField.objects.AbstractObjects;
 import com.kademika.day8.frame21.BattleField.objects.Eagle;
 import com.kademika.day8.frame21.BattleField.objects.Water;
-import com.kademika.day8.frame21.BattleField.objects.tanks.*;
 import com.kademika.day8.frame21.BattleField.objects.tanks.Action;
+import com.kademika.day8.frame21.BattleField.objects.tanks.BT7;
+import com.kademika.day8.frame21.BattleField.objects.tanks.AbstractTank;
+import com.kademika.day8.frame21.BattleField.objects.tanks.Direction;
+import com.kademika.day8.frame21.BattleField.objects.tanks.T34;
 import com.kademika.day8.frame21.interfaces.Tank;
+import com.kademika.day8.frame21.BattleField.objects.tanks.Tiger;
 import com.kademika.day8.frame21.BattleField.objects.tanks.bullet.Bullet;
 
 public class ActionField {
@@ -45,7 +49,14 @@ public class ActionField {
     private BattleField savedBattlefield;
     private AbstractTank savedAgressor;
     private T34 savedDefender;
-    private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
+    private KeyListener keyboardListener = new KeyAdapter() {
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+            defender.setKey(KeyEvent.getKeyText(e.getKeyCode()));
+            System.out.println("keyPressed=" + KeyEvent.getKeyText(e.getKeyCode()));
+        }
+    };
 
     public void replayGame() {
         try (
@@ -84,30 +95,6 @@ public class ActionField {
         System.out.println("Game Over");
     }
 
-    public void runTheGameNew() {
-        try (
-                FileOutputStream outputStream = new FileOutputStream(logFile);
-                OutputStreamWriter writer = new OutputStreamWriter(outputStream);
-                BufferedWriter bw = new BufferedWriter(writer);
-        ) {
-            while (true) {
-                Action defenderAction = defender.setupTank();
-                processAction(defender, defenderAction);
-                bw.write(defenderAction.toString() + "\n");
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void runTheGame() {
 
         try (
@@ -130,11 +117,11 @@ public class ActionField {
 
                 processAction(defender, defenderAction);
                 bw.write(defenderAction.toString() + "\n");
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    Thread.sleep(50);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
         }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -151,23 +138,23 @@ public class ActionField {
                 processMove(tank);
                 break;
             case MOVE_UP:
-                processTurn(tank, Direction.UP);
-                processMove(tank);
-                break;
+            processTurn(tank, Direction.UP);
+            break;
             case MOVE_DOWN:
                 processTurn(tank, Direction.DOWN);
-                processMove(tank);
-                break;
-            case MOVE_RIGHT:
-                processTurn(tank,Direction.RIGHT);
                 processMove(tank);
                 break;
             case MOVE_LEFT:
                 processTurn(tank,Direction.LEFT);
                 processMove(tank);
                 break;
+            case MOVE_RIGHT:
+                processTurn(tank,Direction.RIGHT);
+                processMove(tank);
+                break;
             case TURN_UP:
                 processTurn(tank, Direction.UP);
+                processMove(tank);
                 break;
             case TURN_DOWN:
                 processTurn(tank, Direction.DOWN);
@@ -260,41 +247,43 @@ public class ActionField {
         bul.setDirection(tank.getDirection());
         final int step2 = 1;
 
-//        new Thread() {
-//            @Override
-//            public void run() {
-//                while (bul.getBulletX() > 0 && bul.getBulletY() > 0
-//                        && bul.getBulletX() < bf.getBF_WIDTH() && bul.getBulletY() < bf.getBF_HEIGHT()) {
-//
-//                    int step = 0;
-//
-//                    while (step < 64) {
-//
-//                        if (bul.getDirection().equals(Direction.UP)) {
-//                            bul.updateY(-step2);
-//                        } else if (bul.getDirection().equals(Direction.DOWN)) {
-//                            bul.updateY(step2);
-//                        } else if (bul.getDirection().equals(Direction.LEFT)) {
-//                            bul.updateX(-step2);
-//                        } else {
-//                            bul.updateX(step2);
-//                        }
-//                        step++;
-//                        if (processInterceptionBullet() || bul.getBulletX() < 0
-//                                && bul.getBulletY() < 0 || bul.getBulletX() > bf.getBF_WIDTH()
-//                                || bul.getBulletY() > bf.getBF_HEIGHT()) {
-//                            bul.destroy();
-//                        }
-//
-//                        try {
-//                            Thread.sleep(bul.getSpeed());
-//                        } catch (InterruptedException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }
-//            }
-//        }.start();
+        new Thread() {
+            @Override
+            public void run() {
+                while (bul.getBulletX() > 0 && bul.getBulletY() > 0
+                        && bul.getBulletX() < bf.getBF_WIDTH() && bul.getBulletY() < bf.getBF_HEIGHT()) {
+
+                    int step = 0;
+
+                    while (step < 64) {
+
+                        if (bul.getDirection().equals(Direction.UP)) {
+                            bul.updateY(-step2);
+                        } else if (bul.getDirection().equals(Direction.DOWN)) {
+                            bul.updateY(step2);
+                        } else if (bul.getDirection().equals(Direction.LEFT)) {
+                            bul.updateX(-step2);
+                        } else {
+                            bul.updateX(step2);
+                        }
+                        step++;
+                        if (processInterceptionBullet() || bul.getBulletX() < 0
+                                && bul.getBulletY() < 0 || bul.getBulletX() > bf.getBF_WIDTH()
+                                || bul.getBulletY() > bf.getBF_HEIGHT()) {
+                            bul.destroy();
+                        }
+
+                        try {
+                            Thread.sleep(bul.getSpeed());
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }.start();
+
+
 
     }
 
@@ -411,6 +400,7 @@ public class ActionField {
                 bf.updateQuadrant(defender.getY() / 64, defender.getX() / 64, null);
                 gameFrame.setContentPane(mainPanel);
                 gameFrame.pack();
+                mainPanel.requestFocus();
                 new Thread() {
                     @Override
                     public void run() {
@@ -529,29 +519,24 @@ public class ActionField {
                 }
                 savedDefender = new T34(bf, defender.getX(),defender.getY(), defender.getDirection());
                 savedBattlefield = new BattleField();
-                savedBattlefield.setQuadrantsXY(Integer.valueOf(dimentionX.getText()), Integer.valueOf(dimentionY.getText()));
+                savedBattlefield.setQuadrantsXY(Integer.valueOf(dimentionX.getText()),
+                        Integer.valueOf(dimentionY.getText()));
                 savedBattlefield.setBattleFieldString(bf.getBattleFieldString());
-                mainPanel.getInputMap(IFW).put(KeyStroke.getKeyStroke("UP"), "UP");
-                mainPanel.getInputMap(IFW).put(KeyStroke.getKeyStroke("DOWN"), "DOWN");
-                mainPanel.getInputMap(IFW).put(KeyStroke.getKeyStroke("LEFT"), "LEFT");
-                mainPanel.getInputMap(IFW).put(KeyStroke.getKeyStroke("RIGHT"), "RIGHT");
-                mainPanel.getInputMap(IFW).put(KeyStroke.getKeyStroke("SPACE"), "FIRE");
-                mainPanel.getActionMap().put("UP", new ActionHandler(defender,Action.MOVE_UP));
-                mainPanel.getActionMap().put("DOWN", new ActionHandler(defender,Action.MOVE_DOWN));
-                mainPanel.getActionMap().put("LEFT", new ActionHandler(defender,Action.MOVE_LEFT));
-                mainPanel.getActionMap().put("RIGHT", new ActionHandler(defender,Action.MOVE_RIGHT));
-                mainPanel.getActionMap().put("SPACE", new ActionHandler(defender,Action.FIRE));
+                mainPanel.setFocusable(true);
+                mainPanel.addKeyListener(keyboardListener);
                 gameFrame.setContentPane(mainPanel);
                 gameFrame.setMinimumSize(new Dimension(bf.getBF_WIDTH(),
                         bf.getBF_HEIGHT() + 22));
                 gameFrame.pack();
                 gameFrame.setVisible(true);
+                mainPanel.requestFocus();
                 new Thread() {
                     @Override
                     public void run() {
-                        runTheGameNew();
+                        runTheGame();
                     }
                 }.start();
+
 
             }
 
