@@ -2,6 +2,7 @@ package com.kademika.day8.frame21.BattleField.objects.tanks;
 
 import com.kademika.day8.frame21.BattleField.BattleField;
 import com.kademika.day8.frame21.BattleField.objects.Water;
+import com.kademika.day8.frame21.BattleField.objects.tanks.bullet.Bullet;
 import com.kademika.day8.frame21.interfaces.Destroyable;
 import com.kademika.day8.frame21.interfaces.Drawable;
 import com.kademika.day8.frame21.interfaces.Tank;
@@ -16,6 +17,7 @@ public abstract class AbstractTank implements Destroyable, Drawable, Tank {
 	protected BattleField bf;
     protected Tank enemy;
     protected boolean destroed = false;
+    private Bullet bullet;
 
     public void setEnemy(Tank enemy) {
         this.enemy = enemy;
@@ -32,7 +34,15 @@ public abstract class AbstractTank implements Destroyable, Drawable, Tank {
 		this.direction = direction;
 	}
 
-	public int getX() {
+    public Bullet getBullet() {
+        return bullet;
+    }
+
+    public void setBullet(Bullet bullet) {
+        this.bullet = bullet;
+    }
+
+    public int getX() {
 		return x;
 	}
 

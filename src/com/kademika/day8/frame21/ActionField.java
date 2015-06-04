@@ -37,12 +37,14 @@ public class ActionField {
             agressor.draw(g);
             defender.draw(g);
             bul.draw(g);
+            bul2.draw(g);
         }
     };
     JPanel startPanel;
     private com.kademika.day8.frame21.BattleField.BattleField bf;
     private T34 defender;
     private Bullet bul;
+    private Bullet bul2;
     private AbstractTank agressor;
     private Random randCoordinate = new Random();
     private File logFile = new File("TanksLog");
@@ -52,9 +54,13 @@ public class ActionField {
     private KeyListener keyboardListener = new KeyAdapter() {
 
         @Override
+        public void keyReleased(KeyEvent e) {
+            defender.setKey("");
+        }
+
+        @Override
         public void keyPressed(KeyEvent e) {
             defender.setKey(KeyEvent.getKeyText(e.getKeyCode()));
-            System.out.println("keyPressed=" + KeyEvent.getKeyText(e.getKeyCode()));
         }
     };
 
@@ -93,6 +99,46 @@ public class ActionField {
         }
         gameOver();
         System.out.println("Game Over");
+    }
+
+    public void runTheGameNew() {
+
+        Thread agressorThreed = new Thread() {
+                @Override
+                public void run() {
+                    while (!agressor.isDestroed() && !defender.isDestroed() &&
+                            bf.scanQuadrant(bf.getQuadrantsY() - 1, findEagle()) != null) {
+                        processAction(agressor, agressor.setupTank());
+                        try {
+                            Thread.sleep(17);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            };
+
+        Thread defenderThreed = new Thread() {
+            @Override
+            public void run() {
+                while (!agressor.isDestroed() && !defender.isDestroed() &&
+                        bf.scanQuadrant(bf.getQuadrantsY() - 1, findEagle()) != null) {
+                    processAction(defender, defender.setupTank());
+                }
+            }
+        };
+
+        agressorThreed.start();
+        defenderThreed.start();
+        try {
+            agressorThreed.join();
+            defenderThreed.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        gameOver();
+        System.out.println("Game Over");
+
     }
 
     public void runTheGame() {
@@ -138,8 +184,9 @@ public class ActionField {
                 processMove(tank);
                 break;
             case MOVE_UP:
-            processTurn(tank, Direction.UP);
-            break;
+                processTurn(tank, Direction.UP);
+                processMove(tank);
+                break;
             case MOVE_DOWN:
                 processTurn(tank, Direction.DOWN);
                 processMove(tank);
@@ -166,7 +213,7 @@ public class ActionField {
                 processTurn(tank,Direction.RIGHT);
                 break;
             case FIRE:
-                processFire(tank);
+                processFire(tank, tank.getBullet());
                 break;
             default:
         }
@@ -238,7 +285,7 @@ public class ActionField {
         tank.turn(direction);
     }
 
-    public void processFire(Tank tank) {
+    public void processFire(Tank tank, final Bullet bul) {
 
         bul.destroy();
         bul.setTank(tank);
@@ -267,7 +314,7 @@ public class ActionField {
                             bul.updateX(step2);
                         }
                         step++;
-                        if (processInterceptionBullet() || bul.getBulletX() < 0
+                        if (processInterceptionBullet(bul) || bul.getBulletX() < 0
                                 && bul.getBulletY() < 0 || bul.getBulletX() > bf.getBF_WIDTH()
                                 || bul.getBulletY() > bf.getBF_HEIGHT()) {
                             bul.destroy();
@@ -287,7 +334,7 @@ public class ActionField {
 
     }
 
-    private boolean processInterceptionBullet() {
+    private boolean processInterceptionBullet(Bullet bul) {
 
         String koordinate = getQuadrant(bul.getBulletX(), bul.getBulletY());
         int delim = koordinate.indexOf("_");
@@ -400,7 +447,6 @@ public class ActionField {
                 bf.updateQuadrant(defender.getY() / 64, defender.getX() / 64, null);
                 gameFrame.setContentPane(mainPanel);
                 gameFrame.pack();
-                mainPanel.requestFocus();
                 new Thread() {
                     @Override
                     public void run() {
@@ -447,6 +493,7 @@ public class ActionField {
         bf = new BattleField();
         bf.generateBattleField();
         bul = new Bullet(-100, -100, Direction.LEFT);
+        bul2 = new Bullet(-100, -100, Direction.LEFT);
 
         JLabel labelX = new JLabel("X Dimention: ");
         JLabel labelY = new JLabel("Y Dimention: ");
@@ -510,6 +557,8 @@ public class ActionField {
                 }
                 agressor.setEnemy(defender);
                 defender.setEnemy(agressor);
+                agressor.setBullet(bul);
+                defender.setBullet(bul2);
                 bf.updateQuadrant(agressor.getY() / 64, agressor.getX() / 64, null);
                 bf.updateQuadrant(defender.getY() / 64, defender.getX() / 64, null);
                 if (agressor instanceof Tiger) {
@@ -533,7 +582,7 @@ public class ActionField {
                 new Thread() {
                     @Override
                     public void run() {
-                        runTheGame();
+                        runTheGameNew();
                     }
                 }.start();
 

@@ -3,6 +3,7 @@ package com.kademika.day8.frame21.interfaces;
 
 import com.kademika.day8.frame21.BattleField.objects.tanks.Action;
 import com.kademika.day8.frame21.BattleField.objects.tanks.Direction;
+import com.kademika.day8.frame21.BattleField.objects.tanks.bullet.Bullet;
 
 public interface Tank {
 
@@ -19,5 +20,7 @@ public interface Tank {
 	 public void updateY(int y);
 	 public boolean isDestroed();
 	 public void turn(Direction right);
+     public Bullet getBullet();
+     public void setBullet(Bullet bullet);
 
 }
