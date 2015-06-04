@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.Random;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import javax.swing.*;
 import com.kademika.day8.frame21.BattleField.BattleField;
 import com.kademika.day8.frame21.BattleField.objects.AbstractObjects;
@@ -45,6 +47,7 @@ public class ActionField {
     private T34 defender;
     private Bullet bul;
     private Bullet bul2;
+    private Lock lock = new ReentrantLock();
     private AbstractTank agressor;
     private Random randCoordinate = new Random();
     private File logFile = new File("TanksLog");
@@ -163,11 +166,6 @@ public class ActionField {
 
                 processAction(defender, defenderAction);
                 bw.write(defenderAction.toString() + "\n");
-//                try {
-//                    Thread.sleep(50);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
         }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -183,38 +181,50 @@ public class ActionField {
             case MOVE:
                 processMove(tank);
                 break;
-            case MOVE_UP:
-                processTurn(tank, Direction.UP);
-                processMove(tank);
-                break;
-            case MOVE_DOWN:
-                processTurn(tank, Direction.DOWN);
-                processMove(tank);
-                break;
-            case MOVE_LEFT:
-                processTurn(tank,Direction.LEFT);
-                processMove(tank);
-                break;
-            case MOVE_RIGHT:
-                processTurn(tank,Direction.RIGHT);
-                processMove(tank);
-                break;
             case TURN_UP:
                 processTurn(tank, Direction.UP);
-                processMove(tank);
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 break;
             case TURN_DOWN:
                 processTurn(tank, Direction.DOWN);
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 break;
             case TURN_LEFT:
                 processTurn(tank,Direction.LEFT);
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 break;
             case TURN_RIGHT:
                 processTurn(tank,Direction.RIGHT);
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 break;
             case FIRE:
+                if (tank.getBullet().isDestroyed()) {
                 processFire(tank, tank.getBullet());
                 break;
+                 } else {
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                     break;
+            }
             default:
         }
     }
@@ -287,7 +297,7 @@ public class ActionField {
 
     public void processFire(Tank tank, final Bullet bul) {
 
-        bul.destroy();
+        bul.setDestroyed(false);
         bul.setTank(tank);
         bul.updateX(tank.getX() + 125);
         bul.updateY(tank.getY() + 125);
@@ -314,9 +324,9 @@ public class ActionField {
                             bul.updateX(step2);
                         }
                         step++;
-                        if (processInterceptionBullet(bul) || bul.getBulletX() < 0
-                                && bul.getBulletY() < 0 || bul.getBulletX() > bf.getBF_WIDTH()
-                                || bul.getBulletY() > bf.getBF_HEIGHT()) {
+                        if (processInterceptionBullet(bul) || bul.getBulletX() <= 0
+                                || bul.getBulletY() <= 0 || bul.getBulletX() >= bf.getBF_WIDTH()
+                                || bul.getBulletY() >= bf.getBF_HEIGHT()) {
                             bul.destroy();
                         }
 
@@ -329,9 +339,6 @@ public class ActionField {
                 }
             }
         }.start();
-
-
-
     }
 
     private boolean processInterceptionBullet(Bullet bul) {
@@ -358,7 +365,11 @@ public class ActionField {
                 if (bf.scanQuadrant(elemY, elemX) instanceof AbstractObjects) {
                     AbstractObjects o = (AbstractObjects) bf.scanQuadrant(
                             elemY, elemX);
-                    o.destroy();
+                    try {
+                        o.destroy();
+                    } catch (NullPointerException e) {
+                        System.out.println("Null Pointer Exception");
+                    }
                     bf.updateQuadrant(elemY, elemX, null);
 
                     return true;
@@ -397,8 +408,8 @@ public class ActionField {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                g.setColor(new Color(255, 19, 31));
-                g.fillRect(0,0,1024,1024);
+                g.setColor(new Color(129, 255, 9));
+                g.fillRect(0,0,2048,2048);
             }
         };
         panel.setLayout(new GridBagLayout());
@@ -406,7 +417,11 @@ public class ActionField {
         JButton button = new JButton("Try Again");
         button.setSize(20, 40);
         JLabel lable = new JLabel();
-        lable.setText("GAME OVER");
+        if (!agressor.isDestroed()) {
+            lable.setText("You loose");
+        } else {
+            lable.setText("You win");
+        }
         lable.setSize(100, 100);
         lable.setFont(new Font(Font.MONOSPACED, Font.BOLD, 50));
 

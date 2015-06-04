@@ -81,34 +81,31 @@ public class T34 extends AbstractTank {
 	@Override
 	public Action setupTank() {
 
-			if (key == "Up") {
-				return Action.MOVE_UP;
-			}
-			if (key == "Down") {
-				return Action.MOVE_DOWN;
-			}
-			if (key == "Right") {
-				return Action.MOVE_RIGHT;
-			}
-			if (key == "Left") {
-				return Action.MOVE_LEFT;
-			}
-			if (key == "Space") {
+			if (key == "Up" && direction == Direction.UP) {
+				return Action.MOVE;
+			} else if (key == "Up") {
+                return Action.TURN_UP;
+            }
+			if (key == "Down" && direction == Direction.DOWN) {
+				return Action.MOVE;
+			} else if (key == "Down") {
+                return Action.TURN_DOWN;
+            }
+			if (key == "Right" && direction == Direction.RIGHT) {
+				return Action.MOVE;
+			} else if (key == "Right") {
+                return Action.TURN_RIGHT;
+            }
+			if (key == "Left" && direction == Direction.LEFT) {
+				return Action.MOVE;
+			} else if (key == "Left") {
+                return Action.TURN_LEFT;
+            }
+		    if (key == "Space") {
 				return Action.FIRE;
 			}
 
 		return Action.NOTHING;
-	}
-
-	public boolean checkMinWay(int enemyY, int enemyX, int tankX, int tankY) {
-		if (Math.abs(tankY - enemyY) > Math.abs(tankX - enemyX)) {
-			return true;
-		}
-		return false;
-	}
-
-	public int getQuadrant(int num) {
-		return num/64+1;
 	}
 
 }

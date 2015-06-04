@@ -39,7 +39,7 @@ public class BattleField implements Drawable {
 	public Object[][] getBattleField() {
 		return battleField;
 	}
-	/*private String[][] battleFieldString = new String[][] {
+/*	private String[][] battleFieldString2 = new String[][] {
 			{ "B", "B", "B", "B", "B", "B", "B", "B", "B" },
 			{ "B", "", "", "W", "W", "", "B", "", "B" },
 			{ "B", "R", "R", "", "", "", "", "", "B" },
@@ -72,6 +72,7 @@ public class BattleField implements Drawable {
         Random rand = new Random();
         for (int i=0; i<quadrantsY;i++){
             for (int j=0; j<quadrantsX;j++) {
+                long a = System.currentTimeMillis();
                 battleFieldString[i][j] = generateElements(rand.nextInt(100));
             }
         }
@@ -79,13 +80,10 @@ public class BattleField implements Drawable {
     }
 
 	public void generateBattleField() {
-
 		for (int j = 0; j < quadrantsY; j++) {
 			for (int k = 0; k < quadrantsX; k++) {
-				String XY = getQuadrantXY(j + 1, k + 1);
-				int separator = XY.indexOf("_");
-				int x = Integer.parseInt(XY.substring(separator + 1));
-				int y = Integer.parseInt(XY.substring(0, separator));
+				int x = k*64;
+				int y = j*64;
 				switch (battleFieldString[j][k]) {
 				case "B":
 					battleField[j][k] = new Brick(x, y);

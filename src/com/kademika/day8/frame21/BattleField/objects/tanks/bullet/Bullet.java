@@ -21,9 +21,10 @@ public class Bullet implements Destroyable, Drawable {
 	BufferedImage img_down = null;
 	private int x;
 	private int y;
-//	private int speed = 5;
-    private int speed = 50;
+	private int speed = 3;
+//    private int speed = 100;
 	private Direction direction;
+    private boolean destroyed = true;
 
 	public Bullet(int x, int y, Direction direction) {
 		this.x = x;
@@ -90,6 +91,7 @@ public class Bullet implements Destroyable, Drawable {
 	public void destroy() {
 		x = -100;
 		y = -100;
+        destroyed = true;
 	}
 
     public Tank getTank() {
@@ -114,4 +116,11 @@ public class Bullet implements Destroyable, Drawable {
 		g.drawImage(img, x, y, 15, 15, null);
 	}
 
+    public boolean isDestroyed() {
+        return destroyed;
+    }
+
+    public void setDestroyed(boolean destroyed) {
+        this.destroyed = destroyed;
+    }
 }
