@@ -60,7 +60,7 @@ public class ActionField {
 
         @Override
         public void keyReleased(KeyEvent e) {
-            if (KeyEvent.getKeyText(e.getKeyCode()) != "Space") {
+            if (!"Space".equals(KeyEvent.getKeyText(e.getKeyCode()))) {
                 defender.setKey("");
             } else {
                 defender.setKeyFire("");
@@ -69,7 +69,7 @@ public class ActionField {
 
         @Override
         public void keyPressed(KeyEvent e) {
-            if (KeyEvent.getKeyText(e.getKeyCode()) != "Space") {
+            if (!"Space".equals(KeyEvent.getKeyText(e.getKeyCode()))) {
                     defender.setKey(KeyEvent.getKeyText(e.getKeyCode()));
                 } else {
                     defender.setKeyFire(KeyEvent.getKeyText(e.getKeyCode()));
@@ -204,10 +204,10 @@ public class ActionField {
             case 'R':
                 processTurn(tank,Direction.RIGHT);
                 break;
-//            case 'F':
-//                processFire(tank);
-//                mySleep(100);
-//                break;
+            case 'F':
+                processFire(tank);
+                mySleep(100);
+                break;
             default:
         }
     }
@@ -371,6 +371,46 @@ public class ActionField {
         });
     }
 
+    public ActionField(String mode) {
+
+        new Thread() {
+            @Override
+            public void run() {
+                while (true) {
+                    gameFrame.repaint();
+                    mySleep(16);
+                }
+            }
+        }.start();
+
+        bf = new BattleField();
+        bf.generateBattleField();
+
+        gameFrame.setLocation(100, 100);
+        gameFrame.setMinimumSize(new Dimension(bf.getBF_WIDTH(),
+                bf.getBF_HEIGHT() + 22));
+        gameFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        gameFrame.pack();
+        gameFrame.setVisible(true);
+
+
+        defender = new T34(bf, (bf.getQuadrantsX() / 2 + 1) * 64, (bf.getQuadrantsY() - 1) * 64, Direction.UP);
+        agressor = new Tiger(bf, -200, -200, Direction.DOWN);
+
+        agressor.setEnemy(defender);
+        defender.setEnemy(agressor);
+        bf.updateQuadrant(agressor.getY() / 64, agressor.getX() / 64, null);
+        bf.updateQuadrant(defender.getY() / 64, defender.getX() / 64, null);
+
+        gameFrame.setContentPane(mainPanel);
+        gameFrame.setMinimumSize(new Dimension(bf.getBF_WIDTH(),
+                        bf.getBF_HEIGHT() + 22));
+        gameFrame.pack();
+        gameFrame.setVisible(true);
+
+    }
+
+
 
     public ActionField() {
 
@@ -495,6 +535,10 @@ public class ActionField {
             }
 
         });
+    }
+
+    public Tank getDefender() {
+        return defender;
     }
 
     private void mySleep(int time) {

@@ -6,8 +6,6 @@ import com.kademika.day8.frame21.BattleField.objects.tanks.bullet.Bullet;
 import com.kademika.day8.frame21.interfaces.Destroyable;
 import com.kademika.day8.frame21.interfaces.Drawable;
 import com.kademika.day8.frame21.interfaces.Tank;
-
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 
@@ -106,9 +104,13 @@ public abstract class AbstractTank implements Drawable, Tank {
 		 return ' ';
 		 }
 
+	public BattleField getBf() {
+		return bf;
+	}
+
 	public String getQuadrant(int x, int y) {
 			String result = bf.getQuadrantsY()+1 + "_" + bf.getQuadrantsX()+1;
-			if (x < bf.getBF_WIDTH() && x > 0 && y < bf.getBF_HEIGHT() && y > 0) {
+			if (x < bf.getBF_WIDTH() && x >= 0 && y < bf.getBF_HEIGHT() && y >= 0) {
 				int quadrantX = x / 64;
 				int quadrantY = y / 64;
 				result = quadrantY + "_" + quadrantX;
