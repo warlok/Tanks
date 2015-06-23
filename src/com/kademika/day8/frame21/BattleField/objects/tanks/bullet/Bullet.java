@@ -2,6 +2,10 @@ package com.kademika.day8.frame21.BattleField.objects.tanks.bullet;
 
 import java.awt.Graphics;
 
+import com.kademika.day8.frame21.BattleField.BattleField;
+import com.kademika.day8.frame21.BattleField.objects.AbstractObjects;
+import com.kademika.day8.frame21.BattleField.objects.Water;
+import com.kademika.day8.frame21.BattleField.objects.tanks.AbstractTank;
 import com.kademika.day8.frame21.BattleField.objects.tanks.Direction;
 import com.kademika.day8.frame21.interfaces.Tank;
 import com.kademika.day8.frame21.interfaces.Destroyable;
@@ -11,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.management.BadAttributeValueExpException;
 
 public class Bullet implements Destroyable, Drawable {
 
@@ -60,6 +65,14 @@ public class Bullet implements Destroyable, Drawable {
 		}
 	}
 
+//	public boolean isInterception() {
+//		return interception;
+//	}
+//
+//	public void setInterception(boolean interception) {
+//		this.interception = interception;
+//	}
+
 	public void updateX(int bulletX) {
 		x += bulletX;
 	}
@@ -86,6 +99,44 @@ public class Bullet implements Destroyable, Drawable {
 
 	public void setDirection(Direction direction) {
 		this.direction = direction;
+	}
+
+	public boolean intersseption(BattleField bf, Tank agressor, Tank defender) {
+
+		int elemY = quadrant(y);
+		int elemX = quadrant(x);
+
+		if (elemY >= 0 && elemX >= 0 && elemY < bf.getQuadrantsY() && elemX < bf.getQuadrantsX()) {
+
+			if (elemX == quadrant(agressor.getX()) && elemY == quadrant(agressor.getY())
+					&& !(agressor.equals(tank))) {
+				agressor.destroy();
+				return true;
+			} else if (elemX == quadrant(defender.getX()) && elemY == quadrant(defender.getY())
+					&& !(defender.equals(tank))) {
+				defender.destroy();
+				return true;
+			} else if (bf.scanQuadrant(elemY, elemX) != null && !(bf.scanQuadrant(elemY, elemX) instanceof Water)) {
+
+				if (bf.scanQuadrant(elemY, elemX) instanceof AbstractObjects) {
+					AbstractObjects o = (AbstractObjects) bf.scanQuadrant(
+							elemY, elemX);
+					try {
+						o.destroy();
+					} catch (NullPointerException e) {
+						System.out.println("Null Pointer Exception");
+					}
+					bf.updateQuadrant(elemY, elemX, null);
+
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public int quadrant(int num) {
+		return num/64;
 	}
 
 	public void destroy() {

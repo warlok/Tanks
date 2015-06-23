@@ -166,4 +166,5 @@ public class BattleField implements Drawable {
 		return BF_HEIGHT;
 	}
 
+
 }

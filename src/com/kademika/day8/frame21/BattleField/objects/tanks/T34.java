@@ -20,6 +20,7 @@ public class T34 extends AbstractTank {
 	BufferedImage img_down = null;
 
 	private String key = "";
+	private String keyFire = "";
 
 	public void setKey(String key) {
 		this.key = key;
@@ -35,7 +36,11 @@ public class T34 extends AbstractTank {
 		super(bf,x,y,direction);
 		loadImage();
 	}
-	
+
+	public void setKeyFire(String keyFire) {
+		this.keyFire = keyFire;
+	}
+
 	protected void loadImage() {
 		try {
 			img_left = ImageIO.read(new File("T34_left.png"));
@@ -79,33 +84,42 @@ public class T34 extends AbstractTank {
 	}
 
 	@Override
-	public Action setupTank() {
+	public boolean isFire() {
+		if (keyFire == "Space") {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public char setupTank() {
+
 
 			if (key == "Up" && direction == Direction.UP) {
-				return Action.MOVE;
+				return 'M';
 			} else if (key == "Up") {
-                return Action.TURN_UP;
+                return 'U';
             }
 			if (key == "Down" && direction == Direction.DOWN) {
-				return Action.MOVE;
+				return 'M';
 			} else if (key == "Down") {
-                return Action.TURN_DOWN;
+                return 'D';
             }
 			if (key == "Right" && direction == Direction.RIGHT) {
-				return Action.MOVE;
+				return 'M';
 			} else if (key == "Right") {
-                return Action.TURN_RIGHT;
+                return 'R';
             }
 			if (key == "Left" && direction == Direction.LEFT) {
-				return Action.MOVE;
+				return 'M';
 			} else if (key == "Left") {
-                return Action.TURN_LEFT;
+                return 'L';
             }
-		    if (key == "Space") {
-				return Action.FIRE;
-			}
+//		    if (key == "Space") {
+//				return 'F';
+//			}
 
-		return Action.NOTHING;
+		return ' ';
 	}
 
 }

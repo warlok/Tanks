@@ -60,28 +60,28 @@ public class BT7 extends AbstractTank {
     }
 
     @Override
-    public Action setupTank() {
+    public char setupTank() {
 
         if (x < bf.getQuadrantsX()/2 * 64) {
             while (x != bf.getQuadrantsX()/2 * 64) {
                 if (direction != Direction.RIGHT) {
-                    return Action.TURN_RIGHT;
+                    return 'R';
                 }
                 if (interception() || tanksInterception()) {
-                    return Action.FIRE;
+                    return 'F';
                 } else {
-                    return Action.MOVE;
+                    return 'M';
                 }
             }
         } else {
             while (x != bf.getQuadrantsX()/2 * 64) {
                 if (direction != Direction.LEFT) {
-                    return Action.TURN_LEFT;
+                    return 'L';
                 }
                 if (interception() || tanksInterception()) {
-                    return Action.FIRE;
+                    return 'F';
                 } else {
-                    return Action.MOVE;
+                    return 'M';
                 }
             }
         }
@@ -89,27 +89,27 @@ public class BT7 extends AbstractTank {
         if (y < (bf.getQuadrantsY()-1) * 64) {
             while (y != bf.getQuadrantsY() * 64) {
                 if (direction != Direction.DOWN) {
-                    return Action.TURN_DOWN;
+                    return 'D';
                 }
                 if (interception() || tanksInterception()) {
-                    return Action.FIRE;
+                    return 'F';
                 } else {
-                    return Action.MOVE;
+                    return 'M';
                 }
             }
         } else {
             while (y != bf.getQuadrantsY() * 64) {
                 if (direction != Direction.UP) {
-                    return Action.TURN_UP;
+                    return 'U';
                 }
                 if (interception() || tanksInterception()) {
-                    return Action.FIRE;
+                    return 'F';
                 } else {
-                    return Action.MOVE;
+                    return 'M';
                 }
             }
         }
-        return Action.NOTHING;
+        return ' ';
     }
 
     @Override

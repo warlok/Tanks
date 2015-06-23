@@ -7,8 +7,11 @@ import com.kademika.day8.frame21.interfaces.Destroyable;
 import com.kademika.day8.frame21.interfaces.Drawable;
 import com.kademika.day8.frame21.interfaces.Tank;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
-public abstract class AbstractTank implements Destroyable, Drawable, Tank {
+
+public abstract class AbstractTank implements Drawable, Tank {
 
 	protected int speed = 10;
 	protected int x;
@@ -17,7 +20,8 @@ public abstract class AbstractTank implements Destroyable, Drawable, Tank {
 	protected BattleField bf;
     protected Tank enemy;
     protected boolean destroed = false;
-    private Bullet bullet;
+    private Bullet bul;
+	private ReentrantLock lock = new ReentrantLock();
 
     public void setEnemy(Tank enemy) {
         this.enemy = enemy;
@@ -25,6 +29,10 @@ public abstract class AbstractTank implements Destroyable, Drawable, Tank {
 
     public AbstractTank(BattleField bf) {
 		this.bf = bf;
+	}
+
+	public boolean isFire() {
+		return false;
 	}
 
 	public AbstractTank(BattleField bf, int x, int y, Direction direction) {
@@ -35,11 +43,11 @@ public abstract class AbstractTank implements Destroyable, Drawable, Tank {
 	}
 
     public Bullet getBullet() {
-        return bullet;
+        return bul;
     }
 
     public void setBullet(Bullet bullet) {
-        this.bullet = bullet;
+        this.bul = bullet;
     }
 
     public int getX() {
@@ -80,6 +88,9 @@ public abstract class AbstractTank implements Destroyable, Drawable, Tank {
 		}
 	}
 
+	public ReentrantLock getLock() {
+		return lock;
+	}
 
 	public void destroy() {
 		x = -100;
@@ -91,8 +102,8 @@ public abstract class AbstractTank implements Destroyable, Drawable, Tank {
         return destroed;
     }
 
-	public Action setupTank() {
-		 return Action.MOVE;
+	public char setupTank() {
+		 return ' ';
 		 }
 
 	public String getQuadrant(int x, int y) {
@@ -119,6 +130,51 @@ public abstract class AbstractTank implements Destroyable, Drawable, Tank {
 
 		return false;
 	}
+
+	public void fire() {
+
+				lock.lock();
+				bul = new Bullet(-100, -100, Direction.LEFT);
+				bul.setTank(this);
+				bul.updateX(x + 125);
+				bul.updateY(y + 125);
+				bul.setDirection(direction);
+				int step2 = 1;
+
+				while (bul.getBulletX() > 0 && bul.getBulletY() > 0
+						&& bul.getBulletX() < bf.getBF_WIDTH() && bul.getBulletY() < bf.getBF_HEIGHT()) {
+
+					int step = 0;
+
+					while (step < 64 | !bul.isDestroyed()) {
+
+						if (bul.getDirection().equals(Direction.UP)) {
+							bul.updateY(-step2);
+						} else if (bul.getDirection().equals(Direction.DOWN)) {
+							bul.updateY(step2);
+						} else if (bul.getDirection().equals(Direction.LEFT)) {
+							bul.updateX(-step2);
+						} else {
+							bul.updateX(step2);
+						}
+						step++;
+						if (bul.intersseption(bf,enemy, this) || bul.getBulletX() <= 0
+								|| bul.getBulletY() <= 0 || bul.getBulletX() >= bf.getBF_WIDTH()
+								|| bul.getBulletY() >= bf.getBF_HEIGHT()) {
+							bul.destroy();
+						}
+
+						try {
+							Thread.sleep(bul.getSpeed());
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+				bul = null;
+				lock.unlock();
+			}
+
 
 	public boolean interception() {
 
