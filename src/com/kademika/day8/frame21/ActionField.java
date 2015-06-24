@@ -16,12 +16,14 @@ import com.kademika.day8.frame21.BattleField.objects.tanks.BT7;
 import com.kademika.day8.frame21.BattleField.objects.tanks.AbstractTank;
 import com.kademika.day8.frame21.BattleField.objects.tanks.Direction;
 import com.kademika.day8.frame21.BattleField.objects.tanks.T34;
+import com.kademika.day8.frame21.interfaces.Drawable;
 import com.kademika.day8.frame21.interfaces.Tank;
 import com.kademika.day8.frame21.BattleField.objects.tanks.Tiger;
 import com.kademika.day8.frame21.BattleField.objects.tanks.bullet.Bullet;
 
 public class ActionField {
 
+    private SplashScreen splashScreen;
     private JTextField dimentionX;
     private JTextField dimentionY;
     private Icon icon1;
@@ -35,15 +37,11 @@ public class ActionField {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-            bf.draw(g);
-            agressor.draw(g);
-            defender.draw(g);
-            if (defender.getBullet() != null) {
-                defender.getBullet().draw(g);
-            }
-            if (agressor.getBullet() != null) {
-                agressor.getBullet().draw(g);
-            }
+            draw(bf, g);
+            draw(agressor,g);
+            draw(defender,g);
+            draw(defender.getBullet(),g);
+            draw(agressor.getBullet(), g);
         }
     };
     JPanel startPanel;
@@ -231,9 +229,9 @@ public class ActionField {
                 || (tank.getDirection() == Direction.DOWN && tank.getY() >= bf.getBF_HEIGHT()-64)
                 || (tank.getDirection() == Direction.LEFT && tank.getX() == 0)
                 || (tank.getDirection() == Direction.RIGHT && tank.getX() >= bf.getBF_WIDTH()-64)) {
-            System.out.println("[illegal move] direction: "
-                    + tank.getDirection() + " tankX: " + tank.getX()
-                    + ", tankY: " + tank.getY());
+//            System.out.println("[illegal move] direction: "
+//                    + tank.getDirection() + " tankX: " + tank.getX()
+//                    + ", tankY: " + tank.getY());
             return;
         }
 
@@ -404,7 +402,7 @@ public class ActionField {
 
         gameFrame.setContentPane(mainPanel);
         gameFrame.setMinimumSize(new Dimension(bf.getBF_WIDTH(),
-                        bf.getBF_HEIGHT() + 22));
+                bf.getBF_HEIGHT() + 22));
         gameFrame.pack();
         gameFrame.setVisible(true);
 
@@ -490,7 +488,6 @@ public class ActionField {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-
                 bf.setQuadrantsXY(Integer.valueOf(dimentionX.getText()), Integer.valueOf(dimentionY.getText()));
                 bf.generateBattleField();
 
@@ -539,6 +536,12 @@ public class ActionField {
 
     public Tank getDefender() {
         return defender;
+    }
+
+    private void draw(Drawable object, Graphics g) {
+        if (object != null) {
+            object.draw(g);
+        }
     }
 
     private void mySleep(int time) {
