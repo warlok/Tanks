@@ -23,7 +23,6 @@ import com.kademika.day8.frame21.BattleField.objects.tanks.bullet.Bullet;
 
 public class ActionField {
 
-    private SplashScreen splashScreen;
     private JTextField dimentionX;
     private JTextField dimentionY;
     private Icon icon1;
@@ -367,6 +366,46 @@ public class ActionField {
                 }.start();
             }
         });
+    }
+
+    public ActionField(int num) {
+
+//        new Thread() {
+//            @Override
+//            public void run() {
+//                while (true) {
+//                    gameFrame.repaint();
+//                    mySleep(16);
+//                }
+//            }
+//        }.start();
+
+//        bf = new BattleField();
+//        bf.generateBattleField();
+
+        gameFrame.setLocation(100, 100);
+        gameFrame.setMinimumSize(new Dimension(bf.getBF_WIDTH(),
+                bf.getBF_HEIGHT() + 22));
+        gameFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        gameFrame.pack();
+        gameFrame.setVisible(true);
+
+
+        defender = new T34(bf, (bf.getQuadrantsX() / 2 + 1) * 64, (bf.getQuadrantsY() - 1) * 64, Direction.UP);
+        agressor = new Tiger(bf, -200, -200, Direction.DOWN);
+
+        agressor.setEnemy(defender);
+        defender.setEnemy(agressor);
+        bf.updateQuadrant(agressor.getY() / 64, agressor.getX() / 64, null);
+        bf.updateQuadrant(defender.getY() / 64, defender.getX() / 64, null);
+
+        gameFrame.setContentPane(mainPanel);
+        gameFrame.setMinimumSize(new Dimension(bf.getBF_WIDTH(),
+                bf.getBF_HEIGHT() + 22));
+        gameFrame.pack();
+        gameFrame.setVisible(true);
+
+
     }
 
     public ActionField(String mode) {
