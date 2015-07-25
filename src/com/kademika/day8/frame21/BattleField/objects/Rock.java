@@ -12,7 +12,7 @@ import com.kademika.day8.frame21.interfaces.Destroyable;
 
 public class Rock extends AbstractObjects implements Destroyable {
 
-	BufferedImage img = null;
+	transient BufferedImage img = null;
 	
 	public Rock(int x, int y) {
 	color = new Color(153, 102, 0);

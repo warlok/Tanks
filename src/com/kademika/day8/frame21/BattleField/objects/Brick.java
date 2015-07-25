@@ -11,7 +11,7 @@ import com.kademika.day8.frame21.interfaces.Destroyable;
 
 public class Brick extends AbstractObjects implements Destroyable {
 
-	BufferedImage img = null;
+	transient BufferedImage img = null;
 
 	public Brick(int x, int y) {
 		color = new Color(255, 51, 153);

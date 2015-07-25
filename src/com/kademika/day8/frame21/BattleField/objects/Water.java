@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 
 public class Water extends AbstractObjects {
 
-	BufferedImage img = null;
+	transient BufferedImage img = null;
 	
 	public Water(int x, int y) {
 	color = new Color(0, 0, 255);

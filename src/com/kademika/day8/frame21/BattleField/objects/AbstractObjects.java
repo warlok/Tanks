@@ -15,7 +15,6 @@ public abstract class AbstractObjects implements Drawable, Destroyable {
 	
 	protected int x;
 	protected int y;
-	
 	protected Color color;
 
 	public Color getColor() {
@@ -39,5 +38,6 @@ public abstract class AbstractObjects implements Drawable, Destroyable {
 		x=-1000;
 		y=-1000;
 	}
+
 
 }

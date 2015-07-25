@@ -2,11 +2,16 @@ package com.kademika.day8.frame21;
 
 import com.kademika.day8.frame21.BattleField.BattleField;
 import com.kademika.day8.frame21.BattleField.objects.tanks.*;
+import com.kademika.day8.frame21.interfaces.Drawable;
+import com.kademika.day8.frame21.interfaces.Tank;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.Random;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -17,12 +22,17 @@ import java.util.concurrent.locks.ReentrantLock;
 public class UI  {
 
     private JFrame gameFrame = new JFrame("BATTLE CITY NEW");
+    private Random randCoordinate = new Random();
     private JPanel serverPanel;
     private JPanel serverClientPanel;
     private JPanel clientPanel1;
     private JPanel clientPanel2;
     private JPanel gamePanel;
     private JPanel startPanel;
+    private TanksServer server = TanksServer.SERVER;;
+    private TanksClient client;
+    private Tank tank1;
+    private Tank tank2;
 
 
     public UI() {
@@ -106,6 +116,22 @@ public class UI  {
         start.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        BattleField bf = server.getBf();
+                        bf.setQuadrantsXY(Integer.valueOf(dimentionX.getText()), Integer.valueOf(dimentionY.getText()));
+                        bf.generateBattleFieldString();
+//                        bf.generateBattleField();
+
+                        try {
+                            server.start();
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                }).start();
                 drawSeverClientWindow();
             }
         });
@@ -124,13 +150,38 @@ public class UI  {
         connect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                drawGameWindow();
+                client = new TanksClient();
+                try {
+                    client.connect();
+                    if (client.getSocket().isClosed()) {
+                       JFrame dialogFrame = new JFrame();
+                        JOptionPane.showMessageDialog(dialogFrame,
+                                "Server is Down, try to restart it");
+                    } else {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                client.getBf().generateBattleField();
+                            }
+                        }).start();
+                        drawSecondClientWindow();
+                    }
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
             }
         });
 
         close.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                try {
+                    if (!server.getSs().isClosed()) {
+                        server.stop();
+                    }
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
                 drawFirstWindow();
             }
         });
@@ -143,9 +194,9 @@ public class UI  {
         JButton connect = new JButton("Connect");
         clientPanel1.add(connect, BorderLayout.AFTER_LAST_LINE);
         JLabel labelX = new JLabel("Enter IP address of server: ");
-        final JTextField dimentionX = new JTextField("127.0.0.1", 5);
+        final JTextField host = new JTextField("127.0.0.1", 5);
         dimentionPanel.add(labelX, 0);
-        dimentionPanel.add(dimentionX, 1);
+        dimentionPanel.add(host, 1);
         gameFrame.setContentPane(clientPanel1);
         gameFrame.validate();
         serverClientPanel = null;
@@ -153,7 +204,26 @@ public class UI  {
         connect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                drawSecondClientWindow();
+                client = new TanksClient();
+                try {
+                    client.connect(host.getText());
+
+                    if (client.getSocket().isClosed()) {
+                        JFrame dialogFrame = new JFrame();
+                        JOptionPane.showMessageDialog(dialogFrame,
+                                "Server is Down, try to restart it");
+                    } else {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                client.getBf().generateBattleField();
+                            }
+                        }).start();
+                        drawSecondClientWindow();
+                    }
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
             }
         });
     }
@@ -185,6 +255,7 @@ public class UI  {
         gameFrame.setContentPane(clientPanel2);
         gameFrame.pack();
         gameFrame.validate();
+        serverClientPanel = null;
         clientPanel1 = null;
 
         bt7Button.addActionListener(new ActionListener() {
@@ -242,10 +313,87 @@ public class UI  {
                 agressorButton.setSelected(false);
             }
         });
+
+        start.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (agressorButton.isSelected() && server.getAgressor() == null) {
+                    if (t34Button.isSelected()) {
+                        server.setAgressor(new T34(server.getBf(), randCoordinate.nextInt(server.getBf().getQuadrantsX() - 1) * 64,
+                                (randCoordinate.nextInt(server.getBf().getQuadrantsY()/2)) * 64, Direction.DOWN));
+                    } else if (tigerButton.isSelected()) {
+                        server.setAgressor(new Tiger(server.getBf(), randCoordinate.nextInt(server.getBf().getQuadrantsX() - 1) * 64,
+                                (randCoordinate.nextInt(server.getBf().getQuadrantsY()/2)) * 64, Direction.DOWN));
+                    } else if (bt7Button.isSelected()) {
+                        server.setAgressor(new BT7(server.getBf(), randCoordinate.nextInt(server.getBf().getQuadrantsX() - 1) * 64,
+                                (randCoordinate.nextInt(server.getBf().getQuadrantsY()/2)) * 64, Direction.DOWN));
+                    }
+                    drawGameWindow();
+                } else if (defenderButton.isSelected() && server.getDefender() == null) {
+                    if (t34Button.isSelected()) {
+                        server.setDefender(new T34(server.getBf(), (server.getBf().getQuadrantsX() / 2 + 1) * 64,
+                                (server.getBf().getQuadrantsY() - 1) * 64, Direction.UP));
+                    } else if (tigerButton.isSelected()) {
+                        server.setDefender(new Tiger(server.getBf(), (server.getBf().getQuadrantsX() / 2 + 1) * 64,
+                                (server.getBf().getQuadrantsY() - 1) * 64, Direction.UP));
+                    } else if (bt7Button.isSelected()) {
+                        server.setDefender(new BT7(server.getBf(), (server.getBf().getQuadrantsX() / 2 + 1) * 64,
+                                (server.getBf().getQuadrantsY() - 1) * 64, Direction.UP));
+                    }
+                    drawGameWindow();
+                } else {
+                    JFrame dialogFrame = new JFrame();
+                    JOptionPane.showMessageDialog(dialogFrame,
+                            "This role alredy exist, chose another one");
+                }
+
+            }
+        });
     }
 
     private void drawGameWindow() {
 
+        gamePanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                draw(client.getBf(), g);
+                draw(client.getTank1(), g);
+                draw(client.getTank2(), g);
+                if (client.getTank1() != null) {
+                    draw(client.getTank1().getBullet(), g);
+                }
+                if (client.getTank2() != null) {
+                    draw(client.getTank2().getBullet(), g);
+                }
+
+
+            }
+        };
+        gameFrame.setContentPane(gamePanel);
+        gameFrame.setMinimumSize(new Dimension(client.getBf().getBF_WIDTH(),
+                client.getBf().getBF_HEIGHT() + 22));
+        gameFrame.pack();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    gamePanel.repaint();
+                    try {
+                        Thread.sleep(16);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+        gameFrame.setVisible(true);
+        clientPanel2 = null;
     }
 
+    private void draw(Drawable object, Graphics g) {
+        if (object != null) {
+            object.draw(g);
+        }
+    }
 }

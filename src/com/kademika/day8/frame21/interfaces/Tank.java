@@ -8,7 +8,7 @@ import com.kademika.day8.frame21.BattleField.objects.tanks.bullet.Bullet;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public interface Tank extends Destroyable {
+public interface Tank extends Destroyable, Drawable {
 
 	 public ReentrantLock getLock();
 	 public char setupTank();

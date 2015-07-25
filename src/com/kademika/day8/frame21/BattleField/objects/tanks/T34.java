@@ -14,10 +14,10 @@ import com.kademika.day8.frame21.BattleField.BattleField;
 
 public class T34 extends AbstractTank {
 
-	BufferedImage img_left = null;
-	BufferedImage img_right = null;
-	BufferedImage img_up = null;
-	BufferedImage img_down = null;
+	transient BufferedImage img_left = null;
+	transient BufferedImage img_right = null;
+	transient BufferedImage img_up = null;
+	transient BufferedImage img_down = null;
 
 	private String key = "";
 	private String keyFire = "";

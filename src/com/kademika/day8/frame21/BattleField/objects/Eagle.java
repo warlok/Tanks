@@ -13,7 +13,7 @@ import com.kademika.day8.frame21.interfaces.Destroyable;
 
 public class Eagle extends AbstractObjects implements Destroyable {
 
-	BufferedImage img = null;
+	transient BufferedImage img = null;
 	
 	public Eagle(int x, int y) {
 		color = new Color(255, 255, 0);

@@ -15,10 +15,10 @@ import javax.imageio.ImageIO;
 
 public class BT7 extends AbstractTank {
 
-    BufferedImage img_left = null;
-    BufferedImage img_right = null;
-    BufferedImage img_up = null;
-    BufferedImage img_down = null;
+    transient BufferedImage img_left = null;
+    transient BufferedImage img_right = null;
+    transient BufferedImage img_up = null;
+    transient BufferedImage img_down = null;
 
     public BT7(BattleField bf) {
         super(bf);
