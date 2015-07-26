@@ -4,14 +4,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.Random;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import javax.swing.*;
 import com.kademika.day8.frame21.BattleField.BattleField;
-import com.kademika.day8.frame21.BattleField.objects.AbstractObjects;
 import com.kademika.day8.frame21.BattleField.objects.Eagle;
-import com.kademika.day8.frame21.BattleField.objects.Water;
-import com.kademika.day8.frame21.BattleField.objects.tanks.Action;
 import com.kademika.day8.frame21.BattleField.objects.tanks.BT7;
 import com.kademika.day8.frame21.BattleField.objects.tanks.AbstractTank;
 import com.kademika.day8.frame21.BattleField.objects.tanks.Direction;
@@ -19,7 +14,6 @@ import com.kademika.day8.frame21.BattleField.objects.tanks.T34;
 import com.kademika.day8.frame21.interfaces.Drawable;
 import com.kademika.day8.frame21.interfaces.Tank;
 import com.kademika.day8.frame21.BattleField.objects.tanks.Tiger;
-import com.kademika.day8.frame21.BattleField.objects.tanks.bullet.Bullet;
 
 public class ActionField {
 
@@ -46,7 +40,6 @@ public class ActionField {
     JPanel startPanel;
     private com.kademika.day8.frame21.BattleField.BattleField bf;
     private T34 defender;
-    private Lock lock = new ReentrantLock();
     private AbstractTank agressor;
     private Random randCoordinate = new Random();
     private File logFile = new File("TanksLog");
@@ -136,7 +129,7 @@ public class ActionField {
             }
         };
         fireThreed.start();
-//        agressorThreed.start();
+        agressorThreed.start();
         defenderThreed.start();
         try {
             agressorThreed.join();

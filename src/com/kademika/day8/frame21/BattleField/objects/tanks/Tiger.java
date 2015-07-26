@@ -11,49 +11,15 @@ import javax.imageio.ImageIO;
 public class Tiger extends AbstractTank {
 
 	private int armor;
-	transient BufferedImage img_left = null;
-    transient BufferedImage img_right = null;
-    transient BufferedImage img_up = null;
-    transient BufferedImage img_down = null;
-	
+
 	public Tiger(BattleField bf) {
 		super(bf);
 		armor=1;
-		loadImage();
 	}
 
 	public Tiger(BattleField bf, int x, int y, Direction direction) {
 		super(bf,x,y,direction);
 		armor=1;
-		loadImage();
-	}
-	
-
-    protected void loadImage() {
-		try {
-			img_left = ImageIO.read(new File("tiger_left.png"));
-
-		} catch (IOException e) {
-			System.err.println("Couldn't load image");
-		}
-		try {
-			img_right = ImageIO.read(new File("tiger_right.png"));
-
-		} catch (IOException e) {
-			System.err.println("Couldn't load image");
-		}
-		try {
-			img_up = ImageIO.read(new File("tiger_up.png"));
-
-		} catch (IOException e) {
-			System.err.println("Couldn't load image");
-		}
-		try {
-			img_down = ImageIO.read(new File("tiger_down.png"));
-
-		} catch (IOException e) {
-			System.err.println("Couldn't load image");
-		}
 	}
 
 	public int getArmor() {
@@ -146,13 +112,13 @@ public class Tiger extends AbstractTank {
 	public void draw(Graphics g) {
 		BufferedImage img = null;
 		if (this.getDirection() == Direction.UP) {
-			img = img_up;
+			img = IMAGES.getImgTigerUp();
 		} else if (this.getDirection() == Direction.DOWN) {
-			img = img_down;
+			img = IMAGES.getImgTigerDown();
 		} else if (this.getDirection() == Direction.LEFT) {
-			img = img_left;
+			img = IMAGES.getImgTigerLeft();
 		} else {
-			img = img_right;
+			img = IMAGES.getImgTigerRight();
 		}
 		g.drawImage(img, x, y, 64, 64, null);
 	}

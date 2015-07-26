@@ -3,7 +3,6 @@ package com.kademika.day8.frame21.BattleField.objects.tanks;
 import com.kademika.day8.frame21.BattleField.BattleField;
 import com.kademika.day8.frame21.BattleField.objects.Water;
 import com.kademika.day8.frame21.BattleField.objects.tanks.bullet.Bullet;
-import com.kademika.day8.frame21.interfaces.Destroyable;
 import com.kademika.day8.frame21.interfaces.Drawable;
 import com.kademika.day8.frame21.interfaces.Tank;
 import java.util.concurrent.locks.ReentrantLock;
@@ -11,7 +10,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public abstract class AbstractTank implements Drawable, Tank {
 
-	protected int speed = 10;
+	protected int speed = 5;
 	protected int x;
 	protected int y;
 	protected Direction direction;

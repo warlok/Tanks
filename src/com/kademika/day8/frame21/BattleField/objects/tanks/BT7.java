@@ -15,48 +15,13 @@ import javax.imageio.ImageIO;
 
 public class BT7 extends AbstractTank {
 
-    transient BufferedImage img_left = null;
-    transient BufferedImage img_right = null;
-    transient BufferedImage img_up = null;
-    transient BufferedImage img_down = null;
-
     public BT7(BattleField bf) {
         super(bf);
         speed = super.speed / 2;
-        loadImage();
     }
 
     public BT7(BattleField bf, int x, int y, Direction direction) {
         super(bf, x, y, direction);
-        speed = super.speed / 2;
-        loadImage();
-    }
-
-    protected void loadImage() {
-        try {
-            img_left = ImageIO.read(new File("BT7_left.png"));
-
-        } catch (IOException e) {
-            System.err.println("Couldn't load image");
-        }
-        try {
-            img_right = ImageIO.read(new File("BT7_right.png"));
-
-        } catch (IOException e) {
-            System.err.println("Couldn't load image");
-        }
-        try {
-            img_up = ImageIO.read(new File("BT7_up.png"));
-
-        } catch (IOException e) {
-            System.err.println("Couldn't load image");
-        }
-        try {
-            img_down = ImageIO.read(new File("BT7_down.png"));
-
-        } catch (IOException e) {
-            System.err.println("Couldn't load image");
-        }
     }
 
     @Override
@@ -114,16 +79,15 @@ public class BT7 extends AbstractTank {
 
     @Override
     public void draw(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
         BufferedImage img = null;
         if (this.getDirection() == Direction.UP) {
-            img = img_up;
+            img = IMAGES.getImgBT7Up();
         } else if (this.getDirection() == Direction.DOWN) {
-            img = img_down;
+            img = IMAGES.getImgBT7Down();
         } else if (this.getDirection() == Direction.LEFT) {
-            img = img_left;
+            img = IMAGES.getImgBT7Left();
         } else {
-            img = img_right;
+            img = IMAGES.getImgBT7Right();
         }
         g.drawImage(img, x, y, 64, 64, null);
     }

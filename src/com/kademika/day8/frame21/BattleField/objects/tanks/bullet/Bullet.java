@@ -20,14 +20,9 @@ import javax.management.BadAttributeValueExpException;
 public class Bullet implements Destroyable, Drawable {
 
     Tank tank = null;
-	BufferedImage img_left = null;
-	BufferedImage img_right = null;
-	BufferedImage img_up = null;
-	BufferedImage img_down = null;
 	private int x;
 	private int y;
-	private int speed = 3;
-//    private int speed = 100;
+	private int speed = 1;
 	private Direction direction;
     private boolean destroyed = true;
 
@@ -35,34 +30,6 @@ public class Bullet implements Destroyable, Drawable {
 		this.x = x;
 		this.y = y;
 		this.direction = direction;
-		loadImage();
-	}
-
-	private void loadImage() {
-		try {
-			img_left = ImageIO.read(new File("bullet_left.png"));
-
-		} catch (IOException e) {
-			System.err.println("Couldn't load image");
-		}
-		try {
-			img_right = ImageIO.read(new File("bullet_right.png"));
-
-		} catch (IOException e) {
-			System.err.println("Couldn't load image");
-		}
-		try {
-			img_up = ImageIO.read(new File("bullet_up.png"));
-
-		} catch (IOException e) {
-			System.err.println("Couldn't load image");
-		}
-		try {
-			img_down = ImageIO.read(new File("bullet_down.png"));
-
-		} catch (IOException e) {
-			System.err.println("Couldn't load image");
-		}
 	}
 
 //	public boolean isInterception() {
@@ -156,13 +123,13 @@ public class Bullet implements Destroyable, Drawable {
 	public void draw(Graphics g) {
 		BufferedImage img = null;
 		if (this.getDirection() == Direction.UP) {
-			img = img_up;
+			img = IMAGES.getImgBulletUp();
 		} else if (this.getDirection() == Direction.DOWN) {
-			img = img_down;
+			img = IMAGES.getImgBulletDown();
 		} else if (this.getDirection() == Direction.LEFT) {
-			img = img_left;
+			img = IMAGES.getImgBulletLeft();
 		} else {
-			img = img_right;
+			img = IMAGES.getImgBulletRight();
 		}
 		g.drawImage(img, x, y, 15, 15, null);
 	}
