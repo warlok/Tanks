@@ -121,10 +121,6 @@ public class BattleField implements Drawable {
 		}
 	}
 
-	String getQuadrantXY(int v, int h) {
-		return (v - 1) * 64 + "_" + (h - 1) * 64;
-	}
-
 	public Object scanQuadrant(int x, int y) {
 		if (x >= 0 && x < quadrantsY && y >= 0 && y < quadrantsX) {
 		Object value = battleField[x][y];

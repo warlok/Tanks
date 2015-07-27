@@ -1,15 +1,7 @@
 package com.kademika.day8.frame21.BattleField.objects.tanks;
 
 import java.awt.Graphics;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.Stack;
-
-import javax.imageio.ImageIO;
 import com.kademika.day8.frame21.BattleField.BattleField;
 
 public class T34 extends AbstractTank {

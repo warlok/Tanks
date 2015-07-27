@@ -170,14 +170,14 @@ public class ActionField {
         System.out.println("Game Over");
     }
 
-   public void fire(Tank tank) {
+   public void fire(AbstractTank tank) {
        if (tank.isFire()) {
            processFire(tank);
            mySleep(100);
        }
    }
 
-    public void processAction(Tank tank, char action)  {
+    public void processAction(AbstractTank tank, char action)  {
         switch (action) {
             case 'M':
                 processMove(tank);
@@ -211,7 +211,7 @@ public class ActionField {
         return -1;
     }
 
-    public void processMove(Tank tank)  {
+    public void processMove(AbstractTank tank)  {
         int step = 1;
         int covered = 0;
         Direction direction = tank.getDirection();
@@ -260,12 +260,12 @@ public class ActionField {
 
     }
 
-    public void processTurn(Tank tank, Direction direction) {
+    public void processTurn(AbstractTank tank, Direction direction) {
         tank.turn(direction);
         mySleep(200);
     }
 
-    public void processFire(Tank tank) {
+    public void processFire(AbstractTank tank) {
 
         if (!tank.getLock().isLocked()) {
                     tank.fire();
@@ -273,11 +273,11 @@ public class ActionField {
     }
 
 
-    private boolean processInterceptionBetweenTanks(Tank tank) {
+    private boolean processInterceptionBetweenTanks(AbstractTank tank) {
         return tank.tanksInterception();
     }
 
-    private boolean processInterceptionTank(Tank tank) {
+    private boolean processInterceptionTank(AbstractTank tank) {
         return tank.interception();
     }
 
@@ -461,8 +461,8 @@ public class ActionField {
         bt7Button = new JRadioButton("BT7 faster tank", true);
         tigerButton = new JRadioButton("Tiger with good armor");
         go = new JButton("GO");
-        icon1 = new ImageIcon("BT7_up.png");
-        icon2 = new ImageIcon("tiger_up.png");
+        icon1 = new ImageIcon(getClass().getResource("/BT7.png"));
+        icon2 = new ImageIcon(getClass().getResource("/tiger.png"));
         picture = new JLabel();
         picture.setIcon(icon1);
 
@@ -566,7 +566,7 @@ public class ActionField {
         });
     }
 
-    public Tank getDefender() {
+    public AbstractTank getDefender() {
         return defender;
     }
 

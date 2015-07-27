@@ -33,26 +33,26 @@ public class Images {
 
     {
         try {
-            imgWater = ImageIO.read(new File("water4.png"));
-            imgEagle = ImageIO.read(new File("eagle.png"));
-            imgRock = ImageIO.read(new File("url.png"));
-            imgBrick = ImageIO.read(new File("Brick_Block.png"));
-            imgBulletLeft = ImageIO.read(new File("bullet_left.png"));
-            imgBulletRight = ImageIO.read(new File("bullet_right.png"));
-            imgBulletUp = ImageIO.read(new File("bullet_up.png"));
-            imgBulletDown = ImageIO.read(new File("bullet_down.png"));
-            imgBT7Left = ImageIO.read(new File("BT7_left.png"));
-            imgBT7Right = ImageIO.read(new File("BT7_right.png"));
-            imgBT7Up = ImageIO.read(new File("BT7_up.png"));
-            imgBT7Down = ImageIO.read(new File("BT7_down.png"));
-            imgT34Left = ImageIO.read(new File("T34_left.png"));
-            imgT34Right = ImageIO.read(new File("T34_right.png"));
-            imgT34tUp = ImageIO.read(new File("T34_up.png"));
-            imgT34Down = ImageIO.read(new File("T34_down.png"));
-            imgTigerLeft = ImageIO.read(new File("tiger_left.png"));
-            imgTigerRight = ImageIO.read(new File("tiger_right.png"));
-            imgTigerUp = ImageIO.read(new File("tiger_up.png"));
-            imgTigerDown = ImageIO.read(new File("tiger_down.png"));
+            imgWater = ImageIO.read(getClass().getResourceAsStream("/water4.png"));
+            imgEagle = ImageIO.read(getClass().getResourceAsStream("/eagle.png"));
+            imgRock = ImageIO.read(getClass().getResourceAsStream("/url.png"));
+            imgBrick = ImageIO.read(getClass().getResourceAsStream("/Brick_Block.png"));
+            imgBulletLeft = ImageIO.read(getClass().getResourceAsStream("/bullet_left.png"));
+            imgBulletRight = ImageIO.read(getClass().getResourceAsStream("/bullet_right.png"));
+            imgBulletUp = ImageIO.read(getClass().getResourceAsStream("/bullet_up.png"));
+            imgBulletDown = ImageIO.read(getClass().getResourceAsStream("/bullet_down.png"));
+            imgBT7Left = ImageIO.read(getClass().getResourceAsStream("/BT7_left.png"));
+            imgBT7Right = ImageIO.read(getClass().getResourceAsStream("/BT7_right.png"));
+            imgBT7Up = ImageIO.read(getClass().getResourceAsStream("/BT7_up.png"));
+            imgBT7Down = ImageIO.read(getClass().getResourceAsStream("/BT7_down.png"));
+            imgT34Left = ImageIO.read(getClass().getResourceAsStream("/T34_left.png"));
+            imgT34Right = ImageIO.read(getClass().getResourceAsStream("/T34_right.png"));
+            imgT34tUp = ImageIO.read(getClass().getResourceAsStream("/T34_up.png"));
+            imgT34Down = ImageIO.read(getClass().getResourceAsStream("/T34_down.png"));
+            imgTigerLeft = ImageIO.read(getClass().getResourceAsStream("/tiger_left.png"));
+            imgTigerRight = ImageIO.read(getClass().getResourceAsStream("/tiger_right.png"));
+            imgTigerUp = ImageIO.read(getClass().getResourceAsStream("/tiger_up.png"));
+            imgTigerDown = ImageIO.read(getClass().getResourceAsStream("/tiger_down.png"));
         } catch (IOException e) {
             System.err.println("Couldn't load image");
         }

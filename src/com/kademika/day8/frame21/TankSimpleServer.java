@@ -1,5 +1,6 @@
 package com.kademika.day8.frame21;
 
+import com.kademika.day8.frame21.BattleField.objects.tanks.AbstractTank;
 import com.kademika.day8.frame21.interfaces.Tank;
 
 import java.io.BufferedInputStream;
@@ -17,7 +18,7 @@ public class TankSimpleServer {
     public static void main(String[] args) throws IOException {
 
         af = new ActionField("server");
-        Tank tank = af.getDefender();
+        AbstractTank tank = af.getDefender();
         ServerSocket ss = new ServerSocket(7777);
 
         while (true) {

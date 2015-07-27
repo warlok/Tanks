@@ -7,7 +7,6 @@ import com.kademika.day8.frame21.interfaces.Drawable;
 import com.kademika.day8.frame21.interfaces.Tank;
 import java.util.concurrent.locks.ReentrantLock;
 
-
 public abstract class AbstractTank implements Drawable, Tank {
 
 	protected int speed = 5;
@@ -15,12 +14,12 @@ public abstract class AbstractTank implements Drawable, Tank {
 	protected int y;
 	protected Direction direction;
 	protected BattleField bf;
-    protected Tank enemy;
+    protected AbstractTank enemy;
     protected boolean destroed = false;
     private Bullet bul;
 	private ReentrantLock lock = new ReentrantLock();
 
-    public void setEnemy(Tank enemy) {
+    public void setEnemy(AbstractTank enemy) {
         this.enemy = enemy;
     }
 

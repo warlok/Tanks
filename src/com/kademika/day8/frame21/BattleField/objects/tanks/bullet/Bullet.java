@@ -11,11 +11,6 @@ import com.kademika.day8.frame21.interfaces.Tank;
 import com.kademika.day8.frame21.interfaces.Destroyable;
 import com.kademika.day8.frame21.interfaces.Drawable;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
-import javax.management.BadAttributeValueExpException;
 
 public class Bullet implements Destroyable, Drawable {
 
@@ -68,7 +63,7 @@ public class Bullet implements Destroyable, Drawable {
 		this.direction = direction;
 	}
 
-	public boolean intersseption(BattleField bf, Tank agressor, Tank defender) {
+	public boolean intersseption(BattleField bf, AbstractTank agressor, AbstractTank defender) {
 
 		int elemY = quadrant(y);
 		int elemX = quadrant(x);

@@ -1,17 +1,8 @@
 package com.kademika.day8.frame21.BattleField.objects.tanks;
 
 import com.kademika.day8.frame21.BattleField.BattleField;
-import com.kademika.day8.frame21.BattleField.objects.tanks.Direction;
-import com.kademika.day8.frame21.interfaces.Destroyable;
-import com.kademika.day8.frame21.interfaces.Drawable;
-import com.sun.org.apache.xpath.internal.SourceTree;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 public class BT7 extends AbstractTank {
 

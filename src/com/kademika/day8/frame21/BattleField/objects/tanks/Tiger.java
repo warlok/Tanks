@@ -3,10 +3,6 @@ package com.kademika.day8.frame21.BattleField.objects.tanks;
 import com.kademika.day8.frame21.BattleField.BattleField;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 public class Tiger extends AbstractTank {
 

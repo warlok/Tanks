@@ -1,10 +1,7 @@
 package com.kademika.day8.frame21;
 
 import com.kademika.day8.frame21.BattleField.BattleField;
-import com.kademika.day8.frame21.BattleField.objects.tanks.BT7;
-import com.kademika.day8.frame21.BattleField.objects.tanks.Direction;
-import com.kademika.day8.frame21.BattleField.objects.tanks.T34;
-import com.kademika.day8.frame21.BattleField.objects.tanks.Tiger;
+import com.kademika.day8.frame21.BattleField.objects.tanks.*;
 import com.kademika.day8.frame21.interfaces.Tank;
 
 import java.io.*;
@@ -32,7 +29,7 @@ public class TanksClient {
                @Override
                public void run() {
                    try {
-                       Tank testTank1 = (Tank) ois.readObject();
+                       AbstractTank testTank1 = (AbstractTank) ois.readObject();
                        if (testTank1.getClass().getSimpleName().equals("T43")) {
                            tank1 = new T34(bf, testTank1.getX(),
                                    testTank1.getY(), Direction.DOWN);
@@ -43,7 +40,7 @@ public class TanksClient {
                            tank1 = new BT7(bf, testTank1.getX(),
                                    testTank1.getY(), Direction.DOWN);
                        }
-                      Tank testTank2 = (Tank) ois.readObject();
+                       AbstractTank testTank2 = (AbstractTank) ois.readObject();
                        if (testTank2.getClass().getSimpleName().equals("T34")) {
                            tank2 = new T34(bf, testTank2.getX(),
                                    testTank2.getY(), Direction.DOWN);
