@@ -7,7 +7,7 @@ import com.kademika.day8.frame21.interfaces.Destroyable;
 
 public class Rock extends AbstractObjects implements Destroyable {
 
-	static final BufferedImage IMG = IMAGES.getImgRock();
+	private transient BufferedImage img;
 	
 	public Rock(int x, int y) {
 	this.x = x;
@@ -16,7 +16,8 @@ public class Rock extends AbstractObjects implements Destroyable {
 
 	@Override
 	public void draw(Graphics g) {
-		g.drawImage(IMG, x, y, 64, 64, null);
+		img = IMAGES.getImgRock();
+		g.drawImage(img, x, y, 64, 64, null);
 	}
 	
 }

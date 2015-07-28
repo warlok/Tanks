@@ -2,7 +2,6 @@ package com.kademika.day8.frame21.BattleField.objects.tanks;
 
 import com.kademika.day8.frame21.BattleField.BattleField;
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
 
 public class Tiger extends AbstractTank {
 
@@ -103,7 +102,6 @@ public class Tiger extends AbstractTank {
 
     @Override
 	public void draw(Graphics g) {
-		BufferedImage img = null;
 		if (this.getDirection() == Direction.UP) {
 			img = IMAGES.getImgTigerUp();
 		} else if (this.getDirection() == Direction.DOWN) {

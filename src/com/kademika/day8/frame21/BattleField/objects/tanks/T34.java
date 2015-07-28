@@ -1,7 +1,6 @@
 package com.kademika.day8.frame21.BattleField.objects.tanks;
 
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
 import com.kademika.day8.frame21.BattleField.BattleField;
 
 public class T34 extends AbstractTank {
@@ -27,7 +26,6 @@ public class T34 extends AbstractTank {
 
     @Override
 	public void draw(Graphics g) {
-		BufferedImage img = null;
 		if (this.getDirection() == Direction.UP) {
 			img = IMAGES.getImgT34tUp();
 		} else if (this.getDirection() == Direction.DOWN) {

@@ -5,6 +5,8 @@ import com.kademika.day8.frame21.BattleField.objects.Water;
 import com.kademika.day8.frame21.BattleField.objects.tanks.bullet.Bullet;
 import com.kademika.day8.frame21.interfaces.Drawable;
 import com.kademika.day8.frame21.interfaces.Tank;
+
+import java.awt.image.BufferedImage;
 import java.util.concurrent.locks.ReentrantLock;
 
 public abstract class AbstractTank implements Drawable, Tank {
@@ -13,11 +15,12 @@ public abstract class AbstractTank implements Drawable, Tank {
 	protected int x;
 	protected int y;
 	protected Direction direction;
-	protected BattleField bf;
-    protected AbstractTank enemy;
+	protected transient BattleField bf;
+    protected transient AbstractTank enemy;
     protected boolean destroed = false;
     private Bullet bul;
 	private ReentrantLock lock = new ReentrantLock();
+	protected transient BufferedImage img;
 
     public void setEnemy(AbstractTank enemy) {
         this.enemy = enemy;

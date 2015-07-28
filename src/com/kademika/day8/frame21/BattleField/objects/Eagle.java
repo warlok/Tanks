@@ -6,7 +6,7 @@ import com.kademika.day8.frame21.interfaces.Destroyable;
 
 public class Eagle extends AbstractObjects implements Destroyable {
 
-	static final BufferedImage IMG = IMAGES.getImgEagle();
+	private transient BufferedImage img;
 	
 	public Eagle(int x, int y) {
 		this.x = x;
@@ -15,6 +15,7 @@ public class Eagle extends AbstractObjects implements Destroyable {
 
 	@Override
 	public void draw(Graphics g) {
-		g.drawImage(IMG, x, y, 64, 64, null);
+		img = IMAGES.getImgEagle();
+		g.drawImage(img, x, y, 64, 64, null);
 	}
 }

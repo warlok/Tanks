@@ -6,17 +6,17 @@ import com.kademika.day8.frame21.interfaces.Destroyable;
 
 public class Brick extends AbstractObjects implements Destroyable {
 
-	static final BufferedImage IMG = IMAGES.getImgBrick();
+	private transient BufferedImage img;
 
 	public Brick(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
 
-
 	@Override
 	public void draw(Graphics g) {
-		g.drawImage(IMG, x, y, 64, 64, null);
+		img = IMAGES.getImgBrick();
+		g.drawImage(img, x, y, 64, 64, null);
 	}
 
 }
