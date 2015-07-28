@@ -79,13 +79,13 @@ public class Tiger extends AbstractTank {
             }
             result = 'M';
         } else if ( tankY > enemyY) {
-            if (direction != Direction.LEFT) {
-                return 'D';
+            if (direction != Direction.UP) {
+                return 'U';
             }
             result = 'M';
         } else if (tankY < enemyY) {
-            if (direction != Direction.UP) {
-                return 'U';
+            if (direction != Direction.DOWN) {
+                return 'D';
             }
             result = 'M';
         }
@@ -94,10 +94,7 @@ public class Tiger extends AbstractTank {
     }
 
     public boolean checkMinWay(int enemyY, int enemyX, int tankX, int tankY) {
-        if (Math.abs(tankY - enemyY) > Math.abs(tankX - enemyX)) {
-            return true;
-        }
-        return false;
+        return (Math.abs(tankY - enemyY) > Math.abs(tankX - enemyX));
     }
 
     public int getQuadrant(int num) {

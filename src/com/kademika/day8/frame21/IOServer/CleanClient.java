@@ -1,4 +1,4 @@
-package com.kademika.day8.frame21;
+package com.kademika.day8.frame21.IOServer;
 
 import java.io.IOException;
 import java.io.OutputStream;

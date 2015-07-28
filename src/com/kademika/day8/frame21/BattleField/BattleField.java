@@ -13,14 +13,26 @@ import com.kademika.day8.frame21.interfaces.Drawable;
 
 public class BattleField implements Drawable {
 
-    private int size = 64;
-    private int quadrantsX = 9;
-    private int quadrantsY = 9;
+    private transient int size = 64;
+    private transient int quadrantsX;
+    private transient int quadrantsY;
 
-    private int BF_WIDTH = quadrantsX*size;
-	private int BF_HEIGHT = quadrantsY*size;
+    private transient int BF_WIDTH = quadrantsX*size;
+	private transient int BF_HEIGHT = quadrantsY*size;
 
-	public String[][] getBattleFieldString() {
+    public BattleField() {
+        quadrantsX = 9;
+        quadrantsY = 9;
+        generateBattleFieldString();
+    }
+
+    public BattleField(int quadrantsX, int quadrantsY) {
+        this.quadrantsX = quadrantsX;
+        this.quadrantsY = quadrantsY;
+        generateBattleFieldString();
+    }
+
+    public String[][] getBattleFieldString() {
 		return battleFieldString;
 	}
 
@@ -38,21 +50,6 @@ public class BattleField implements Drawable {
 
 	public Object[][] getBattleField() {
 		return battleField;
-	}
-/*	private String[][] battleFieldString2 = new String[][] {
-			{ "B", "B", "B", "B", "B", "B", "B", "B", "B" },
-			{ "B", "", "", "W", "W", "", "B", "", "B" },
-			{ "B", "R", "R", "", "", "", "", "", "B" },
-			{ "B", "", "", "", "", "W", "B", "", "B" },
-			{ "B", "", "", "", "", "", "", "", "B" },
-			{ "B", "B", "", "W", "", "", "W", "B", "B" },
-			{ "B", "W", "W", "", "", "B", "", "", "B" },
-			{ "B", "W", "W", "B", "B", "B", "", "", "B" },
-			{ "B", "B", "B", "B", "E", "B", "B", "B", "B" } };*/
-
-
-	public BattleField() {
-        generateBattleFieldString();
 	}
 
     public String generateElements(int n) {
@@ -100,7 +97,6 @@ public class BattleField implements Drawable {
 				default:
 					battleField[j][k] = null;
 					break;
-
 				}
 			}
 		}
